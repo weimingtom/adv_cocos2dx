@@ -77,8 +77,8 @@ public:
 	static ScriptReader* getInstance();	//获取实例
 	static void destoryInstance();	//销毁实例
 
-	Sprite* charSprites[5];//储存五个角色，0左，1左中，2中，3右中，4右
-	Layer* charStage;	//存储立绘的层
+	cocos2d::CCSprite* charSprites[5];//储存五个角色，0左，1左中，2中，3右中，4右
+	cocos2d::CCLayer* charStage;	//存储立绘的层
 
 	Charactor** chars[5];	//储存五个角色，0左，1左中，2中，3右中，4右
 	int* charNumber; //当前显示立绘数量
@@ -86,22 +86,22 @@ public:
 	bool isWaitingForSelection;	//是否等待选择支中。出现选项菜单的时候应该由选项来触发脚本
 	
 
-	Node* stage;	//绘制场景Node
+	cocos2d::CCNode* stage;	//绘制场景Node
 
 	bool nextPositionIsLeft;	//下一个角色显示位置判断。
 	
-	void initWithStage(Node* stage);	//初始化数据
+	void initWithStage(cocos2d::CCNode* stage);	//初始化数据
 
-	std::function<void(std::string &text)> showText;	//显示文本回调
-	std::function<void(std::string &text)> showName;	//显示名称回调
-	std::function<void(std::string &background)> changeBackground;	//切换背景图片
-	std::function<void(std::string &file)> playBackgroundMusic;		//播放背景音乐
-	std::function<void()> stopBackgroundMusic;						//停止背景音乐
-	std::function<void(std::string &file)> playSound;				//播放音效
-	std::function<void()> stopSound;								//停止音效
-	std::function<void(std::string &cName, std::string &face)> showCharator;	//显示立绘
-	std::function<void(std::string &name)> hideCharator;	//隐藏立绘
-	std::function<void(std::map<std::string, std::string>)> showSelect;	//显示选项
+	void (*showText) (std::string &text);	//显示文本回调
+	void (*showName) (std::string &text);	//显示名称回调
+	void (*changeBackground) (std::string &background);	//切换背景图片
+	void (*playBackgroundMusic) (std::string &file);		//播放背景音乐
+	void (*stopBackgroundMusic) ();						//停止背景音乐
+	void (*playSound) (std::string &file);				//播放音效
+	void (*stopSound) ();								//停止音效
+	void (*showCharator) (std::string &cName, std::string &face);	//显示立绘
+	void (*hideCharator) (std::string &name);	//隐藏立绘
+	void (*showSelect) (std::map<std::string, std::string>);	//显示选项
 
 	void loadScriptFile(std::string path);	//载入脚本数据
 	void clearScript();	//清理脚本数据

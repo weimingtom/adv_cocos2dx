@@ -8,6 +8,6 @@ public:
 	std::string sign;	//Ìø×ªµÄ±êÇ©
 	SCJump(ScriptReader* reader, std::string &sign);
 	~SCJump();
-	void execute(cocos2d::Node* stage);
+	void execute(cocos2d::CCNode* stage);
 };
 

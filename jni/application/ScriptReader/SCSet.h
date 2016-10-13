@@ -10,9 +10,9 @@ class ScriptReader::SCSet : public ScriptCommand
 public:
 	SCSet(ScriptReader *reader, std::string &key, char mark, int value);
 	~SCSet();
-	void execute(cocos2d::Node* stage);
+	void execute(cocos2d::CCNode* stage);
 
-	void setDataValue(std::string key,int value);
+	void setDataValue(std::string key, int value);
 	int getDataValue(std::string key);
 
 }; 

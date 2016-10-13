@@ -5,7 +5,7 @@ ScriptReader::SCLeave::SCLeave(ScriptReader* reader, std::string &name)
 	:cName(name)
 {
 	this->reader = reader;
-	this->type = ScriptCommandType::Leave;
+	this->type = Leave;
 }
 
 
@@ -13,7 +13,7 @@ ScriptReader::SCLeave::~SCLeave()
 {
 }
 
-void ScriptReader::SCLeave::execute(cocos2d::Node* stage)
+void ScriptReader::SCLeave::execute(cocos2d::CCNode* stage)
 {
 	/*
 	auto cha = CM->getCharactor(cName);

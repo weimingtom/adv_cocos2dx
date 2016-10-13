@@ -3,16 +3,17 @@
 //脚本文件路径
 #define BGLISTPATH "/bgimage/bgList.txt"
 
-BackgroundManager* BackgroundManager::_instance = nullptr;
+BackgroundManager* BackgroundManager::_instance = NULL;
 
 BackgroundManager::BackgroundManager()
-	:_pool(nullptr)
+	:_pool(NULL)
 {
 	_pool = new std::map<std::string, std::string>();	//创建容器
 
 	defaultBackground = "";	//设定默认的背景为空地址
 
-	std::string ss = FileUtils::getInstance()->getStringFromFile(BGLISTPATH);	//读取文件
+	//std::string ss = FileUtils::getInstance()->getStringFromFile(BGLISTPATH);	//读取文件
+	std::string ss = CCString::createWithContentsOfFile(CCFileUtils::sharedFileUtils()->fullPathForFilename(BGLISTPATH).c_str())->getCString();
 
 	int sPos = 0;	//行头
 	int ePos = 0;	//行尾
@@ -46,7 +47,7 @@ BackgroundManager::BackgroundManager()
 
 		/*添加进场景容器*/
 		addBackground(key, background);
-		log("SCB> addBackground[%s]", key.c_str());
+		CCLOG("SCB> addBackground[%s]", key.c_str());
 	}
 }
 
@@ -57,7 +58,7 @@ BackgroundManager::~BackgroundManager()
 	{
 		_pool->clear();
 		delete _pool;
-		_pool = nullptr;
+		_pool = NULL;
 	}
 }
 
@@ -69,14 +70,15 @@ void BackgroundManager::addBackground(std::string key, std::string background)
 
 std::string BackgroundManager::getBackground(std::string key)
 {
-	auto result = _pool->find(key);
+	typedef std::map<std::string, std::string> MAP;
+	MAP::iterator result = _pool->find(key);
 	if (result != _pool->end())
 	{
 		return result->second;
 	}
 	else
 	{
-		log("BM> Unfind &s", key);
+		CCLOG("BM> Unfind &s", key);
 		defaultBackground = "/bgimage/Black.jpg";
 		return defaultBackground;
 	}
@@ -84,7 +86,7 @@ std::string BackgroundManager::getBackground(std::string key)
 
 BackgroundManager* BackgroundManager::getInstance()
 {
-	if (_instance == nullptr)
+	if (_instance == NULL)
 	{
 		_instance = new BackgroundManager();
 	}
@@ -96,6 +98,6 @@ void BackgroundManager::destoryInstance()
 	if (_instance)
 	{
 		delete _instance;
-		_instance = nullptr;
+		_instance = NULL;
 	}
 }

@@ -6,7 +6,7 @@ ScriptReader::SCBackground::SCBackground(ScriptReader *reader, std::string key)
 	:key(key)
 {
 	this->reader = reader;
-	this->type = ScriptCommandType::Background;
+	this->type = Background;
 }
 
 
@@ -15,7 +15,7 @@ ScriptReader::SCBackground::~SCBackground()
 }
 
 
-void ScriptReader::SCBackground::execute(cocos2d::Node* stage)
+void ScriptReader::SCBackground::execute(cocos2d::CCNode* stage)
 {
 	reader->changeBackground(key);
 	reader->nextScript();

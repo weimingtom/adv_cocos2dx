@@ -4,7 +4,7 @@
 ScriptReader::SCSelect::SCSelect(ScriptReader *reader)
 {
 	this->reader = reader;
-	this->type = ScriptCommandType::Select;
+	this->type = Select;
 }
 
 
@@ -18,7 +18,7 @@ void ScriptReader::SCSelect::addOption(std::string &sign, std::string &text)
 }
 
 
-void ScriptReader::SCSelect::execute(Node* stage)
+void ScriptReader::SCSelect::execute(cocos2d::CCNode* stage)
 {
 	reader->isWaitingForSelection = true;
 

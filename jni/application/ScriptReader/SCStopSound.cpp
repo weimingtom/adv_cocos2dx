@@ -4,7 +4,7 @@
 ScriptReader::SCStopSound::SCStopSound(ScriptReader *reader)
 {
 	this->reader = reader;
-	this->type = ScriptCommandType::StopSd;
+	this->type = StopSd;
 }
 
 
@@ -12,7 +12,7 @@ ScriptReader::SCStopSound::~SCStopSound()
 {
 }
 
-void ScriptReader::SCStopSound::execute(cocos2d::Node* stage)
+void ScriptReader::SCStopSound::execute(cocos2d::CCNode* stage)
 {
 	reader->stopSound();
 

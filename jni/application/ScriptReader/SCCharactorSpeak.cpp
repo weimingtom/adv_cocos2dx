@@ -1,7 +1,7 @@
 #include "SCCharactorSpeak.h"
 #include "CharactorManager.h"
-#include "GameSystem.h"
-#include "History.hpp"
+#include "../GameSystem.h"
+#include "../History.hpp"
 
 ScriptReader::SCCharactorSpeak::SCCharactorSpeak(ScriptReader *reader, std::string &name, std::string &text, std::string &face)
 	:cName(name)
@@ -9,7 +9,7 @@ ScriptReader::SCCharactorSpeak::SCCharactorSpeak(ScriptReader *reader, std::stri
 	, text(text)
 {
 	this->reader = reader;
-	this->type = ScriptCommandType::CharactorSpeak;
+	this->type = CharactorSpeak;
 }
 
 ScriptReader::SCCharactorSpeak::~SCCharactorSpeak()
@@ -17,7 +17,7 @@ ScriptReader::SCCharactorSpeak::~SCCharactorSpeak()
 
 }
 
-void ScriptReader::SCCharactorSpeak::execute(cocos2d::Node* stage)
+void ScriptReader::SCCharactorSpeak::execute(cocos2d::CCNode* stage)
 {
 	bool isName = true;
 	Charactor* cha;
@@ -41,5 +41,5 @@ void ScriptReader::SCCharactorSpeak::execute(cocos2d::Node* stage)
 	{
 		HistoryLogger::getInstance()->addRecord("null", text, "");
 	}
-	cocos2d::log("%s",text.c_str());
+	CCLOG("%s",text.c_str());
 }

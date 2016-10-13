@@ -132,5 +132,166 @@ SOURCE=.\main_win32.h
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # End Group
+# Begin Group "ScriptReader"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\ScriptReader\BackgroundManager.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\BackgroundManager.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\BackgroundMusicManager.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\BackgroundMusicManager.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\CharactorManager.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\CharactorManager.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCBackground.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCBackground.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCCharactorSpeak.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCCharactorSpeak.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCIf.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCIf.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCJump.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCJump.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCLeave.cpp
+
+!IF  "$(CFG)" == "application - Win32 Release"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "application - Win32 Debug"
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCLeave.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCPlayBGM.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCPlayBGM.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCPlaySound.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCPlaySound.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\ScriptCommand.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\ScriptCommand.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\ScriptReader.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\ScriptReader.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCSelect.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCSelect.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCSet.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCSet.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCStopBGM.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCStopBGM.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCStopSound.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SCStopSound.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SoundManager.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ScriptReader\SoundManager.h
+# End Source File
+# End Group
+# Begin Group "src"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\GameSystem.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\History.hpp
+# End Source File
+# End Group
 # End Target
 # End Project

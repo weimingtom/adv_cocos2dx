@@ -1,11 +1,11 @@
 #include "CharactorManager.h"
 #define charactorPath "/charactor/charactorList.txt"
 
-CharactorManager* CharactorManager::_instance = nullptr;
+CharactorManager* CharactorManager::_instance = NULL;
 
 CharactorManager::CharactorManager()
-	:_pool(nullptr)
-	, defaultCharactor(nullptr)
+	:_pool(NULL)
+	, defaultCharactor(NULL)
 {
 	_pool = new std::map<std::string, Charactor*>();
 
@@ -13,7 +13,8 @@ CharactorManager::CharactorManager()
 
 	//Load datas
 
-	std::string ss = FileUtils::getInstance()->getStringFromFile(charactorPath);
+	//std::string ss = FileUtils::getInstance()->getStringFromFile(charactorPath);
+	std::string ss = CCString::createWithContentsOfFile(CCFileUtils::sharedFileUtils()->fullPathForFilename(charactorPath).c_str())->getCString();
 
 	int sPos = 0;
 	int ePos = 0;
@@ -23,7 +24,7 @@ CharactorManager::CharactorManager()
 	
 	while (1)
 	{
-		auto tempCharactor = new Charactor();
+		Charactor *tempCharactor = new Charactor();
 		std::string key;
 		std::string name;
 		ePos = ss.find('\n', sPos);
@@ -66,7 +67,7 @@ CharactorManager::CharactorManager()
 		*/
 
 		addCharactor(key, tempCharactor);
-		log("CM> addCharactor[%s]", tempCharactor->name.c_str());
+		CCLOG("CM> addCharactor[%s]", tempCharactor->name.c_str());
 	}
 }
 
@@ -75,25 +76,26 @@ CharactorManager::~CharactorManager()
 {
 	if (_pool)
 	{
-		for (auto i = _pool->begin(); i != _pool->end(); i++)
+		typedef std::map<std::string, Charactor*> MAP;
+		for (MAP::iterator i = _pool->begin(); i != _pool->end(); i++)
 		{
 			delete i->second;
 		}
 		_pool->clear();
 		delete _pool;
-		_pool = nullptr;
+		_pool = NULL;
 	}
 
 	if (defaultCharactor)
 	{
 		delete defaultCharactor;
-		defaultCharactor = nullptr;
+		defaultCharactor = NULL;
 	}
 }
 
 CharactorManager* CharactorManager::getInstance()
 {
-	if (_instance == nullptr)
+	if (_instance == NULL)
 	{
 		_instance = new CharactorManager();
 	}
@@ -105,13 +107,14 @@ void CharactorManager::destoryInstance()
 	if (_instance)
 	{
 		delete _instance;
-		_instance = nullptr;
+		_instance = NULL;
 	}
 }
 
 Charactor* CharactorManager::getCharactor(std::string &key)
 {
-	auto result = _pool->find(key);
+	typedef std::map<std::string, Charactor*> MAP;
+	MAP::iterator result = _pool->find(key);
 	if (result != _pool->end())
 	{
 		return result->second;

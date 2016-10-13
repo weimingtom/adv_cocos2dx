@@ -1,5 +1,5 @@
 #include "SCIf.h"
-#include "GameSystem.h"
+#include "../GameSystem.h"
 #include <sstream>
 
 
@@ -9,7 +9,7 @@ ScriptReader::SCIf::SCIf(ScriptReader *reader, std::string expression, std::stri
 	, _falseTag(falseTag)
 {
 	this->reader = reader;
-	this->type = ScriptCommandType::If;
+	this->type = If;
 }
 
 
@@ -17,11 +17,11 @@ ScriptReader::SCIf::~SCIf()
 {
 }
 
-void ScriptReader::SCIf::execute(cocos2d::Node* stage)
+void ScriptReader::SCIf::execute(cocos2d::CCNode* stage)
 {
 	if (_expression.compare("") == 0)
 	{
-		cocos2d::log("SC> If expressiong is null");
+		CCLOG("SC> If expressiong is null");
 		reader->nextScript();
 	}
 	if (expressionJudge())
@@ -45,7 +45,7 @@ bool ScriptReader::SCIf::expressionJudge()
 	pos = exp.find_first_of("><=", 0);
 	if (pos < 0)
 	{
-		cocos2d::log("SC> If expressiong do not have symbol");
+		CCLOG("SC> If expressiong do not have symbol");
 		return true;
 	}
 	else
@@ -170,6 +170,7 @@ bool ScriptReader::SCIf::expressionJudge()
 		}
 
 	}
+	return false;
 }
 
 void ScriptReader::SCIf::jump(std::string tag)

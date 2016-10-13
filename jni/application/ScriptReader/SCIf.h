@@ -10,7 +10,7 @@ class ScriptReader::SCIf : public ScriptCommand
 public:
 	SCIf(ScriptReader *reader, std::string expression, std::string trueTag, std::string falseTag);
 	~SCIf();
-	void execute(Node* stage);
+	void execute(cocos2d::CCNode* stage);
 	bool expressionJudge();
 	void jump(std::string tag);
 };

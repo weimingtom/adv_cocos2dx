@@ -1,5 +1,5 @@
 #include "SCSet.h"
-#include "GameSystem.h"
+#include "../GameSystem.h"
 
 
 ScriptReader::SCSet::SCSet(ScriptReader* reader, std::string &key, char mark, int value)
@@ -8,7 +8,7 @@ ScriptReader::SCSet::SCSet(ScriptReader* reader, std::string &key, char mark, in
 	, _value(value)
 {
 	this->reader = reader;
-	this->type = ScriptCommandType::Set;
+	this->type = Set;
 }
 
 
@@ -16,7 +16,7 @@ ScriptReader::SCSet::~SCSet()
 {
 }
 
-void ScriptReader::SCSet::execute(cocos2d::Node* stage)
+void ScriptReader::SCSet::execute(cocos2d::CCNode* stage)
 {
 	switch (_mark)
 	{
@@ -29,11 +29,11 @@ void ScriptReader::SCSet::execute(cocos2d::Node* stage)
 		_value = getDataValue(_key) + _value;
 		break;
 	default:
-		log("SC>Set:Unknow Symbol.");
+		CCLOG("SC>Set:Unknow Symbol.");
 		break;
 	}
 	setDataValue(_key, _value);
-	log("SC>Set:%s=%d",_key.c_str(),_value);
+	CCLOG("SC>Set:%s=%d",_key.c_str(),_value);
 
 	reader->nextScript();
 }

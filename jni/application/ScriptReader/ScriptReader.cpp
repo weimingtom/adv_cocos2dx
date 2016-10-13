@@ -1,4 +1,4 @@
-﻿#include "ScriptReader.h"
+#include "ScriptReader.h"
 //#include "ScriptCommand.h"
 #include "SCCharactorSpeak.h"
 #include "SCLeave.h"
@@ -12,18 +12,18 @@
 #include "SCSet.h"
 #include "SCIf.h"
 #include "CharactorManager.h"
-#include "GameSystem.h"
+#include "../GameSystem.h"
 
 USING_NS_CC;
 
-ScriptReader* ScriptReader::_instance = nullptr;
+ScriptReader* ScriptReader::_instance = NULL;
 
 ScriptReader::ScriptReader()
 	:_currentSignName("gameStart")
 	, _currentCommandIndex(0)
 	, nextPositionIsLeft(true)
 	, charNumber(0)
-	, stage(nullptr)
+	, stage(NULL)
 	, isWaitingForSelection(0)
 {
 }
@@ -34,21 +34,21 @@ ScriptReader::~ScriptReader()
 	clearScript();
 }
 
-void ScriptReader::initWithStage(Node* stage)
+void ScriptReader::initWithStage(cocos2d::CCNode* stage)
 {
 	this->stage = stage;
-	charStage = Layer::create();
+	charStage = cocos2d::CCLayer::create();
 	stage->addChild(charStage);
 	for (int i = 0; i < 5; i++)
 	{
-		chars[i] = nullptr;
+		chars[i] = NULL;
 	}
 
 }
 
 ScriptReader* ScriptReader::getInstance()
 {
-	if (_instance == nullptr)
+	if (_instance == NULL)
 	{
 		_instance = new ScriptReader();
 	}
@@ -60,7 +60,7 @@ void ScriptReader::destoryInstance()
 	if (_instance)
 	{
 		delete _instance;
-		_instance = nullptr;
+		_instance = NULL;
 	}
 }
 
@@ -71,49 +71,51 @@ void ScriptReader::destoryInstance()
 
 void ScriptReader::clearScript()
 {
-	for (auto itr = _scripts.begin(); itr != _scripts.end(); itr++)
+	typedef std::vector<ScriptCommand*>* MAP_VALUE;
+	typedef std::map<std::string, MAP_VALUE> MAP;
+	for (MAP::iterator itr = _scripts.begin(); itr != _scripts.end(); itr++)
 	{
-		auto list = itr->second;
+		MAP_VALUE list = itr->second;
 		int size = list->size();
 		("DeleteList size[%d]", size);
 		if (size > 0)
 		{
 			for (int i = 0; i < size; i++)
 			{
-				auto ptr = list->at(i);
+				ScriptCommand* ptr = list->at(i);
 				switch (ptr->type)
 				{
-				case ScriptCommandType::CharactorSpeak:
+				case CharactorSpeak:
 					delete (SCCharactorSpeak*)ptr;
 					break;
-				case ScriptCommandType::Leave:
+				case Leave:
 					delete (SCLeave*)ptr;
 					break;
-				case ScriptCommandType::Jump:
+				case Jump:
 					delete (SCJump*)ptr;
 					break;
-				case ScriptCommandType::Select:
+				case Select:
 					delete (SCSelect*)ptr;
 					break;
-				case ScriptCommandType::Background:
+				case Background:
 					delete (SCBackground*)ptr;
 					break;
-				case ScriptCommandType::PlayBGM:
+				case PlayBGM:
 					delete (SCPlayBGM*)ptr;
 					break;
-				case ScriptCommandType::StopBGM:
+				case StopBGM:
 					delete (SCStopBGM*)ptr;
 					break;
-				case ScriptCommandType::PlaySd:
+				case PlaySd:
 					delete (SCPlaySound*)ptr;
 					break;
-				case ScriptCommandType::StopSd:
+				case StopSd:
 					delete (SCStopSound*)ptr;
 					break;
-				case ScriptCommandType::Set:
+				case Set:
 					delete (SCSet*)ptr;
 					break;
-				case ScriptCommandType::If:
+				case If:
 					delete (SCIf*)ptr;
 					break;
 				}
@@ -132,18 +134,19 @@ void ScriptReader::loadScriptFile(std::string path)
 {
 	clearScript();
 
-	std::string ss = FileUtils::getInstance()->getStringFromFile(path);
+	//std::string ss = FileUtils::getStringFromFile(path);
+	std::string ss = CCString::createWithContentsOfFile(CCFileUtils::sharedFileUtils()->fullPathForFilename(path.c_str()).c_str())->getCString();
 
 	int sPos = 0;
 	int ePos = 0;
 
 	std::string currentSign = "default";	//标签，默认default
-	auto cms = new std::vector<ScriptCommand*>();
+	std::vector<ScriptCommand*> *cms = new std::vector<ScriptCommand*>();
 	_scripts.insert(std::pair<std::string, std::vector<ScriptCommand*>*>(currentSign, cms));
 
-	log("LoadScript::>");
+	CCLOG("LoadScript::>");
 
-	SCSelect* currentSelect = nullptr;
+	SCSelect* currentSelect = NULL;
 
 	while (sPos >= 0)
 	{
@@ -174,7 +177,7 @@ void ScriptReader::loadScriptFile(std::string path)
 					currentSign = command.substr(1, command.length() - 1);
 					cms = new std::vector<ScriptCommand*>();
 					_scripts.insert(std::pair < std::string, std::vector<ScriptCommand*>*>(currentSign,cms));
-					log("SC> Add sign[%s]", currentSign.c_str());
+					CCLOG("SC> Add sign[%s]", currentSign.c_str());
 				}
 				else
 				{
@@ -188,7 +191,7 @@ void ScriptReader::loadScriptFile(std::string path)
 							cmdParams = cmd.substr(scriptNamePos + 1, cmd.length() - scriptNamePos - 1);
 							cmd = cmd.substr(0, scriptNamePos);
 						}
-						log("SC> Add command[%s] params[%s] Sign[%s]", cmd.c_str(), cmdParams.c_str(), currentSign.c_str());
+						CCLOG("SC> Add command[%s] params[%s] Sign[%s]", cmd.c_str(), cmdParams.c_str(), currentSign.c_str());
 
 						if (cmd.compare("Select") == 0)
 						{
@@ -302,7 +305,7 @@ void ScriptReader::loadScriptFile(std::string path)
 						}
 						else
 						{
-							log("Unknow Script Command> [%s]:[%s]", cmd.c_str(), cmdParams.c_str());
+							CCLOG("Unknow Script Command> [%s]:[%s]", cmd.c_str(), cmdParams.c_str());
 						}
 												
 												
@@ -313,7 +316,7 @@ void ScriptReader::loadScriptFile(std::string path)
 					{
 						if (command[0] == '>')	//解读选择项
 						{
-							if (currentSelect != nullptr)
+							if (currentSelect != NULL)
 							{
 								std::string cmd = command.substr(1, command.length() - 1);
 								int scriptNamePos = cmd.find_first_of(':', 0);
@@ -323,7 +326,7 @@ void ScriptReader::loadScriptFile(std::string path)
 									cmdParams = cmd.substr(scriptNamePos + 1, cmd.length() - scriptNamePos - 1);
 									cmd = cmd.substr(0, scriptNamePos);
 								}
-								log("SC> options Sign[%s] text[%s]", cmd.c_str(), cmdParams.c_str());
+								CCLOG("SC> options Sign[%s] text[%s]", cmd.c_str(), cmdParams.c_str());
 								currentSelect->addOption(cmd, cmdParams);
 							}
 						}
@@ -336,7 +339,7 @@ void ScriptReader::loadScriptFile(std::string path)
 							std::string face = "";
 							if (scriptNamePos < 0)	//找不到":"的话cmd默认就是旁白
 							{
-								log("SC Csay Text[%s]", cmd.c_str());
+								CCLOG("SC Csay Text[%s]", cmd.c_str());
 								SCCharactorSpeak* csCMD = new SCCharactorSpeak(this, face, cmd, face);	//这里的face只是用来顶替空串而已
 								cms->push_back(csCMD);
 							}
@@ -350,7 +353,7 @@ void ScriptReader::loadScriptFile(std::string path)
 									face = cmd.substr(scriptNamePos + 1, cmd.length() - scriptNamePos - 1);
 									cmd = cmd.substr(0, scriptNamePos);
 								}
-								log("SC Csay CHA[%s] Face[%s] Text[%s]", cmd.c_str(), face.c_str(), cmdParams.c_str());
+								CCLOG("SC Csay CHA[%s] Face[%s] Text[%s]", cmd.c_str(), face.c_str(), cmdParams.c_str());
 								SCCharactorSpeak* csCMD = new SCCharactorSpeak(this, cmd, cmdParams, face);
 								cms->push_back(csCMD);
 							}
@@ -365,17 +368,18 @@ void ScriptReader::loadScriptFile(std::string path)
 
 void ScriptReader::jumpToSign(const std::string &sign)
 {
-	log("sign: %s", sign.c_str());
+	CCLOG("sign: %s", sign.c_str());
 	if (sign.compare("") == 0)
 	{
-		log("Sign is null");
+		CCLOG("Sign is null");
 		return;
 	}
 	isWaitingForSelection = false;
-	auto list = _scripts.find(sign);
+	typedef std::map<std::string, std::vector<ScriptCommand*>*> MAP;
+	MAP::iterator list = _scripts.find(sign);
 	if (list == _scripts.end())
 	{
-		log("Sign [%s] not found", sign.c_str());
+		CCLOG("Sign [%s] not found", sign.c_str());
 		return;
 	}
 	_currentSignName = sign;
@@ -389,66 +393,67 @@ void ScriptReader::nextScript()
 	
 	if (isWaitingForSelection)
 	{
-		log("waitting");
+		CCLOG("waitting");
 		return;
 	}
 	_currentCommandIndex++;
 	//log("Size of Script = [%d]", _scripts.size);
-	auto list = _scripts.find(_currentSignName);
+	typedef std::map<std::string, std::vector<ScriptCommand*>*> MAP;
+	MAP::iterator list = _scripts.find(_currentSignName);
 	if (list == _scripts.end())
 	{
-		log("No Sign of currentSign [%s]", _currentSignName.c_str());
+		CCLOG("No Sign of currentSign [%s]", _currentSignName.c_str());
 		return;
 	}
-	auto cmdList = list->second;
+	std::vector<ScriptCommand*>* cmdList = list->second;
 	if (_currentCommandIndex-1 >= (int)cmdList->size())
 	{
-		log("End of Script..! CurrentScript");
+		CCLOG("End of Script..! CurrentScript");
 		//do something to done
 		return;
 	}
 
-	auto cmd = cmdList->at(_currentCommandIndex-1);
+	ScriptCommand* cmd = cmdList->at(_currentCommandIndex-1);
 
-	log("sign = %s, commandIndex = %d", _currentSignName.c_str(), _currentCommandIndex);
+	CCLOG("sign = %s, commandIndex = %d", _currentSignName.c_str(), _currentCommandIndex);
 
 	switch (cmd->type)
 	{
-	case ScriptCommandType::CharactorSpeak:
+	case CharactorSpeak:
 		((SCCharactorSpeak*)cmd)->execute(stage);
 		break;
-	case ScriptCommandType::Leave:
+	case Leave:
 		((SCLeave*)cmd)->execute(stage);
 		break;
-	case ScriptCommandType::Jump:
+	case Jump:
 		((SCJump*)cmd)->execute(stage);
 		break;
-	case ScriptCommandType::Select:
+	case Select:
 		((SCSelect*)cmd)->execute(stage);
 		break;
-	case ScriptCommandType::Background:
+	case Background:
 		((SCBackground*)cmd)->execute(stage);
 		break;
-	case ScriptCommandType::PlayBGM:
+	case PlayBGM:
 		((SCPlayBGM*)cmd)->execute(stage);
 		break;
-	case ScriptCommandType::StopBGM:
+	case StopBGM:
 		((SCStopBGM*)cmd)->execute(stage);
 		break;
-	case ScriptCommandType::PlaySd:
+	case PlaySd:
 		((SCPlaySound*)cmd)->execute(stage);
 		break;
-	case ScriptCommandType::StopSd:
+	case StopSd:
 		((SCStopSound*)cmd)->execute(stage);
 		break;
-	case ScriptCommandType::Set:
+	case Set:
 		((SCSet*)cmd)->execute(stage);
 		break;
-	case ScriptCommandType::If:
+	case If:
 		((SCIf*)cmd)->execute(stage);
 		break;
 	default:
-		log("Unhandle ScriptCommandType [%d]", cmd->type);
+		CCLOG("Unhandle ScriptCommandType [%d]", cmd->type);
 	}
 	//_currentCommandIndex++;
 }
@@ -472,14 +477,15 @@ void ScriptReader::jumpToSign(const std::string &sign, int index)
 {
 	if (sign.compare("") == 0)
 	{
-		log("Sign is null");
+		CCLOG("Sign is null");
 		return;
 	}
 	isWaitingForSelection = false;
-	auto list = _scripts.find(sign);
+	typedef std::map<std::string, std::vector<ScriptCommand*>*> MAP;
+	MAP::iterator list = _scripts.find(sign);
 	if (list == _scripts.end())
 	{
-		log("Sign [%s] not found", sign.c_str());
+		CCLOG("Sign [%s] not found", sign.c_str());
 		return;
 	}
 	_currentSignName = sign;

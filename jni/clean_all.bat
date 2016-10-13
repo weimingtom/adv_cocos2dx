@@ -1,6 +1,9 @@
 rmdir /S /Q application\Debug application\Release application\Debug_console application\Release_console
 del /Q application\*.plg application\*.ncb application\*.opt application\*.aps application\*.suo
 
+rmdir /S /Q application\ScriptReader\Debug application\ScriptReader\Release application\ScriptReader\Debug_console application\ScriptReader\Release_console
+del /Q application\ScriptReader\*.plg application\ScriptReader\*.ncb application\ScriptReader\*.opt application\ScriptReader\*.aps application\ScriptReader\*.suo
+
 rmdir /S /Q jpeg\Debug jpeg\Release 
 del /Q jpeg\*.plg jpeg\*.ncb jpeg\*.opt jpeg\*.aps jpeg\*.suo
 

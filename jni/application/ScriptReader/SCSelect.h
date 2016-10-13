@@ -12,7 +12,7 @@ public:
 
 	void addOption(std::string &sign, std::string &text);
 
-	void execute(Node* stage);
+	void execute(cocos2d::CCNode* stage);
 
 };
 

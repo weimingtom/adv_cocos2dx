@@ -24,40 +24,40 @@ struct Charactor
 {
 	std::string key;	//角色key
 	std::string name;	//角色名
-	Color3B color;	//对白颜色（暂时不使用）
+	cocos2d::ccColor3B color;	//对白颜色（暂时不使用）
 	//待补充……
 	std::map<std::string, char*>* fgList;	//立绘列表
 	int favor;	//好感度（暂时不使用）
 	int hate;	//仇恨度（暂时不使用）
 
-	Sprite* faceSprite;	//当前显示中的精灵，考虑到角色入场和离场所使用的存储的变量。
+	cocos2d::CCSprite* faceSprite;	//当前显示中的精灵，考虑到角色入场和离场所使用的存储的变量。
 	std::string currentFace;	//当前显示的立绘
 	bool positionIsLeft;	//显示的位置
 	PositionType currentPosition;	//当前显示的位置
 
 	Charactor()
 		:name("NoName")
-		, color(Color3B::BLACK)
+		, color(cocos2d::ccBLACK)
 		//待补充……
-		, fgList(nullptr)
+		, fgList(NULL)
 		, favor(0)
 		, hate(0)
-		, faceSprite(nullptr)
+		, faceSprite(NULL)
 		, currentFace("")
 	{}
 
 	char* getCharactorFace(std::string &face)	//根据face值获取角色表情
 	{
-		log("CM> result.first = %s", face.c_str());
-		auto result = fgList->find(face);
+		CCLOG("CM> result.first = %s", face.c_str());
+		std::map<std::string, char*>::iterator result = fgList->find(face);
 		if (result != fgList->end())
 		{
-			log("CM> result.second = %s", result->second);
+			CCLOG("CM> result.second = %s", result->second);
 			return result->second;
 		}
 		else
 		{
-			return nullptr;
+			return NULL;
 		}
 	}
 
@@ -67,45 +67,45 @@ struct Charactor
 		//auto actionTo = MoveTo::create(1, Point(Distance, 0));
 		switch (pt)
 		{
-		case PositionType::LEFT:
+		case LEFT:
 		{
 			//faceSprite->setPositionX(320);
 			Distance = 320;
-			faceSprite->runAction(MoveTo::create(0.3f, Point(Distance, 0)));
+			faceSprite->runAction(cocos2d::CCMoveTo::create(0.3f, cocos2d::CCPoint(Distance, 0)));
 			break;
 		}
-		case PositionType::LEFT_CENTER:
+		case LEFT_CENTER:
 		{
 			//faceSprite->setPositionX(427);
 			Distance = 427;
-			log("name = %s", name.c_str());
-			faceSprite->runAction(MoveTo::create(0.3f, Point(Distance, 0)));
+			CCLOG("name = %s", name.c_str());
+			faceSprite->runAction(cocos2d::CCMoveTo::create(0.3f, cocos2d::CCPoint(Distance, 0)));
 			break;
 		}
-		case PositionType::CENTER:
+		case CENTER:
 		{
 			//faceSprite->setPositionX(640);
 			Distance = 640;
-			faceSprite->runAction(MoveTo::create(0.3f, Point(Distance, 0)));
+			faceSprite->runAction(cocos2d::CCMoveTo::create(0.3f, cocos2d::CCPoint(Distance, 0)));
 			break;
 		}
-		case PositionType::RIGHT_CENTER:
+		case RIGHT_CENTER:
 		{
 			//faceSprite->setPositionX(853);
 			Distance = 853;
-			faceSprite->runAction(MoveTo::create(0.3f, Point(Distance, 0)));
+			faceSprite->runAction(cocos2d::CCMoveTo::create(0.3f, cocos2d::CCPoint(Distance, 0)));
 			break;
 		}
-		case PositionType::RIGHT:
+		case RIGHT:
 		{
 			//faceSprite->setPositionX(960);
 			Distance = 960;
-			faceSprite->runAction(MoveTo::create(0.3f, Point(Distance, 0)));
+			faceSprite->runAction(cocos2d::CCMoveTo::create(0.3f, cocos2d::CCPoint(Distance, 0)));
 			break;
 		}
 		default:
 		{
-			log("[Error]CM> Unknow PositionType.");
+			CCLOG("[Error]CM> Unknow PositionType.");
 			break;
 		}
 		}
@@ -117,9 +117,9 @@ struct Charactor
 		if (faceSprite)
 		{
 			faceSprite->removeFromParent();
-			faceSprite=nullptr;
+			faceSprite = NULL;
 			currentFace = "";
-			currentPosition = PositionType::EMPTY;
+			currentPosition = EMPTY;
 		}
 	}
 };

@@ -2,16 +2,17 @@
 
 #define SOUNDLISTPATH "/sound/soundList.txt"
 
-SoundManager* SoundManager::_instance = nullptr;
+SoundManager* SoundManager::_instance = NULL;
 
 SoundManager::SoundManager()
-	:_pool(nullptr)
+	:_pool(NULL)
 {
 	_pool = new std::map<std::string, std::string>();
 
 	defaultSound = "";
 
-	std::string ss = FileUtils::getInstance()->getStringFromFile(SOUNDLISTPATH);
+	//std::string ss = FileUtils::getInstance()->getStringFromFile(SOUNDLISTPATH);
+	std::string ss = CCString::createWithContentsOfFile(CCFileUtils::sharedFileUtils()->fullPathForFilename(SOUNDLISTPATH).c_str())->getCString();
 
 	int sPos = 0;
 	int ePos = 0;
@@ -28,7 +29,7 @@ SoundManager::SoundManager()
 		temp = ss.substr(sPos, ePos - sPos - 1);
 		if (temp.compare("") == 0)
 		{
-			log("SM> Load Sound ending");
+			CCLOG("SM> Load Sound ending");
 			break;
 		}
 		sPos = ePos + 1;
@@ -38,10 +39,10 @@ SoundManager::SoundManager()
 		sound = temp.substr(tempPos + 1, temp.length() - tempPos - 1);
 		sound = "/sound/" + sound + ".mp3";
 
-		log("soundkey = %s , soundPath = %s", key.c_str(), sound.c_str());
+		CCLOG("soundkey = %s , soundPath = %s", key.c_str(), sound.c_str());
 
 		addSound(key, sound);
-		log("SM> addSound[%s]", key.c_str());
+		CCLOG("SM> addSound[%s]", key.c_str());
 	}
 }
 
@@ -52,7 +53,7 @@ SoundManager::~SoundManager()
 	{
 		_pool->clear();
 		delete _pool;
-		_pool = nullptr;
+		_pool = NULL;
 	}
 }
 
@@ -64,14 +65,15 @@ void SoundManager::addSound(std::string key, std::string sound)
 
 std::string SoundManager::getSound(std::string key)
 {
-	auto result = _pool->find(key);
+	typedef std::map<std::string, std::string> MAP;
+	MAP::iterator result = _pool->find(key);
 	if (result != _pool->end())
 	{
 		return result->second;
 	}
 	else
 	{
-		log("SM> Unfind &s", key);
+		CCLOG("SM> Unfind &s", key);
 		defaultSound = "";
 		return defaultSound;
 	}
@@ -79,10 +81,10 @@ std::string SoundManager::getSound(std::string key)
 
 SoundManager* SoundManager::getInstance()
 {
-	if (_instance == nullptr)
+	if (_instance == NULL)
 	{
 		_instance = new SoundManager();
-		//log("SM> instance starting...");
+		//CCLOG("SM> instance starting...");
 	}
 	return _instance;
 }
@@ -92,6 +94,6 @@ void SoundManager::destoryInstance()
 	if (_instance)
 	{
 		delete _instance;
-		_instance = nullptr;
+		_instance = NULL;
 	}
 }

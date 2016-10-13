@@ -4,7 +4,7 @@
 ScriptReader::SCStopBGM::SCStopBGM(ScriptReader *reader)
 {
 	this->reader = reader;
-	this->type = ScriptCommandType::StopBGM;
+	this->type = StopBGM;
 }
 
 
@@ -12,7 +12,7 @@ ScriptReader::SCStopBGM::~SCStopBGM()
 {
 }
 
-void ScriptReader::SCStopBGM::execute(cocos2d::Node* stage)
+void ScriptReader::SCStopBGM::execute(cocos2d::CCNode* stage)
 {
 	reader->stopBackgroundMusic();
 

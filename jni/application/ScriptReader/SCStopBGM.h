@@ -8,6 +8,6 @@ public:
 	SCStopBGM(ScriptReader *reader);
 	~SCStopBGM();
 
-	void execute(cocos2d::Node* stage);
+	void execute(cocos2d::CCNode* stage);
 };
 
