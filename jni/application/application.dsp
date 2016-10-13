@@ -293,5 +293,49 @@ SOURCE=.\GameSystem.h
 SOURCE=.\History.hpp
 # End Source File
 # End Group
+# Begin Group "TestFolder"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\TestFolder\TestInFolder.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TestFolder\TestInFolder.h
+# End Source File
+# End Group
+# Begin Group "Control"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\Control\EasyButton.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Control\EasyButton.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Control\PopupLayer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Control\RadioButton.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Control\RadioButton.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Control\Slidebar.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Control\Slidebar.h
+# End Source File
+# End Group
 # End Target
 # End Project
