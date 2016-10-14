@@ -1369,6 +1369,26 @@ SOURCE=.\touch_dispatcher\CCTouchHandler.cpp
 SOURCE=.\touch_dispatcher\CCTouchHandler.h
 # End Source File
 # End Group
+# Begin Group "extentsions_GUI"
+
+# PROP Default_Filter ""
+# Begin Group "CCControlExtension"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\GUI\CCControlExtension\CCControlExtensions.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\GUI\CCControlExtension\CCScale9Sprite.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\GUI\CCControlExtension\CCScale9Sprite.h
+# End Source File
+# End Group
+# End Group
 # Begin Source File
 
 SOURCE=.\CCCamera.cpp
@@ -1411,7 +1431,19 @@ SOURCE=.\CCScheduler.h
 # End Source File
 # Begin Source File
 
+SOURCE=".\cocos-ext.h"
+# End Source File
+# Begin Source File
+
 SOURCE=.\cocos2d.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ExtensionExport.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ExtensionMacros.h
 # End Source File
 # End Target
 # End Project

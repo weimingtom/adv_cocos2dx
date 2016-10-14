@@ -10,15 +10,16 @@
 
 PopupLayer::PopupLayer(const std::string &backgroundImage)
 {
-    Size visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	cocos2d::CCSize visibleSize = cocos2d::CCDirector::sharedDirector()->getVisibleSize();
+	//Vec2
+	cocos2d::CCPoint origin = cocos2d::CCDirector::sharedDirector()->getVisibleOrigin();
     //初始化背景图层
-    _backgroundLayer = LayerColor::create(Color4B(0, 0, 0, 64));
+    _backgroundLayer = cocos2d::CCLayerColor::create(ccc4(0, 0, 0, 64));
     this->addChild(_backgroundLayer);
     //初始化背景框
-    _backgroundSprite = ui::Scale9Sprite::create(backgroundImage);
-    _backgroundSprite->cocos2d::Node::setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-    _backgroundSprite->setPosition(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y);
+    _backgroundSprite = cocos2d::extension::CCScale9Sprite::create(backgroundImage.c_str());
+    _backgroundSprite->CCNode::setAnchorPoint(ccp(0.5f, 0.5f)/*Vec2::ANCHOR_MIDDLE*/);
+    _backgroundSprite->setPosition(ccp(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
     this->addChild(_backgroundSprite);
     //初始化按钮数量
     _buttonCounter = 0;
@@ -26,9 +27,9 @@ PopupLayer::PopupLayer(const std::string &backgroundImage)
     _buttonList = new std::vector<PopupButton*>;
     //初始化Y值
     _buttonPositionY = _backgroundSprite->getContentSize().height / 2 - _backgroundSprite->getContentSize().height / 3;
-    log("_backgroundSprite.height = %f, _buttonPositionY = %d", _backgroundSprite->getContentSize().height, _buttonPositionY);
+    CCLOG("_backgroundSprite.height = %f, _buttonPositionY = %d", _backgroundSprite->getContentSize().height, _buttonPositionY);
     //初始化Menu
-    _buttonMenu = Menu::create();
+    _buttonMenu = cocos2d::CCMenu::create();
     _buttonMenu->setPosition(0, _buttonPositionY);
     this->addChild(_buttonMenu);
     //初始化对话框文字
@@ -36,11 +37,13 @@ PopupLayer::PopupLayer(const std::string &backgroundImage)
     _popupTextSize = DEFAULT_TEXT_SIZE;
     _popupTextPositionX = _backgroundSprite->getContentSize().width / 2;
     _popupTextPositionY = (_backgroundSprite->getContentSize().height / 3) * 2;
-    _popupText = Label::createWithSystemFont("Are you sure?", _popupTextFont, _popupTextSize);
-    _popupText->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-    _popupText->setPosition(_popupTextPositionX, _popupTextPositionY);
+	//createWithSystemFont
+    _popupText = cocos2d::CCLabelTTF::create("Are you sure?", _popupTextFont.c_str(), _popupTextSize);
+    _popupText->setAnchorPoint(ccp(0.5f, 0.5f)/*Vec2::ANCHOR_MIDDLE*/);
+    _popupText->setPosition(ccp(_popupTextPositionX, _popupTextPositionY));
     _backgroundSprite->addChild(_popupText);
     //阻断触碰事件
+#if 0
     auto *backgroundTouch = EventListenerTouchOneByOne::create();
     backgroundTouch->onTouchBegan = [=] (Touch *t, Event *e)
     {
@@ -48,7 +51,7 @@ PopupLayer::PopupLayer(const std::string &backgroundImage)
     };
     backgroundTouch->onTouchEnded = [=] (Touch *t, Event *e)
     {
-        log("Background touched.");
+        CCLOG("Background touched.");
         //碰到对话框以外的区域就释放整个层
         this->runAction(Sequence::create(CallFunc::create(CC_CALLBACK_0(Node::removeFromParent, this)), NULL));
     };
@@ -66,6 +69,7 @@ PopupLayer::PopupLayer(const std::string &backgroundImage)
     };
     backgroundSpriteTouch->setSwallowTouches(true);
     _backgroundSprite->getEventDispatcher()->addEventListenerWithSceneGraphPriority(backgroundSpriteTouch, _backgroundSprite);
+#endif
 }
 
 PopupLayer::~PopupLayer()
@@ -79,21 +83,22 @@ PopupLayer* PopupLayer::create(const std::string &backgroundImage)
     return popupLayer;
 }
 
-void PopupLayer::addButton(const std::string &normalImage, std::function<void (Ref *)> &callback)
+void PopupLayer::addButton(const std::string &normalImage, void (&callback)(cocos2d::CCObject *))
 {
     addButton(normalImage, normalImage, normalImage,callback);
 }
 
-void PopupLayer::addButton(const std::string &normalImage, const std::string &selectedImage, std::function<void (Ref *)> &callback)
+void PopupLayer::addButton(const std::string &normalImage, const std::string &selectedImage, void (&callback)(cocos2d::CCObject *))
 {
     addButton(normalImage, selectedImage, selectedImage, callback);
 }
 
-void PopupLayer::addButton(const std::string &normalImage, const std::string &touchImage, const std::string &selectedImage, std::function<void (Ref *)> &callback)
+void PopupLayer::addButton(const std::string &normalImage, const std::string &touchImage, const std::string &selectedImage, void (&callback)(cocos2d::CCObject *))
 {
     //待实现
 }
 
+#if 0
 void PopupLayer::addLabelButton(const std::string &buttonText, const ccMenuCallback& callback)
 {
     //创建MenuItemFont
@@ -103,10 +108,10 @@ void PopupLayer::addLabelButton(const std::string &buttonText, const ccMenuCallb
     
     buttonTouch->onTouchBegan = [=] (Touch *t, Event *e)
     {
-        //log("button began touched.");
+        //CCLOG("button began touched.");
         if (button->getBoundingBox().containsPoint(_backgroundSprite->convertTouchToNodeSpace(t)))
         {
-            //log("button touched.");
+            //CCLOG("button touched.");
             return true;
         }
         return false;
@@ -116,10 +121,10 @@ void PopupLayer::addLabelButton(const std::string &buttonText, const ccMenuCallb
     {
         
         //释放整个层
-        //log("button end touched.");
+        //CCLOG("button end touched.");
         if (button->getBoundingBox().containsPoint(_backgroundSprite->convertTouchToNodeSpace(t)))
         {
-            //log("button touched.");
+            //CCLOG("button touched.");
             this->runAction(Sequence::create(CallFunc::create(CC_CALLBACK_0(Node::removeFromParent, this)), NULL));
         }
     };
@@ -135,6 +140,7 @@ void PopupLayer::addLabelButton(const std::string &buttonText, const ccMenuCallb
     //排列按钮的位置
     arrange();
 }
+#endif
 
 void PopupLayer::arrange()
 {
@@ -143,21 +149,22 @@ void PopupLayer::arrange()
     _buttonMenu->removeFromParent();
     _buttonMenu->removeAllChildren();
     //auto buttonVector = new std::vector<MenuItem*>;
-    Vector<MenuItem*> buttonVector;
-    for (int i = 0; i < _buttonCounter; i++)
+    //Vector<MenuItem*> buttonVector;
+	cocos2d::CCArray *buttonVector = cocos2d::CCArray::create();
+	for (int i = 0; i < _buttonCounter; i++)
     {
-        _buttonList->at(i)->button->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+        _buttonList->at(i)->button->setAnchorPoint(ccp(0.5f, 0.5f)/*Vec2::ANCHOR_MIDDLE*/);
         _buttonList->at(i)->button->setPosition(tempX * (i+1), _buttonPositionY);
-        //log("Button %d = [%f,%d]",i,tempX * (i+1), _buttonPositionY);
-        buttonVector.pushBack(_buttonList->at(i)->button);
+        //CCLOG("Button %d = [%f,%d]",i,tempX * (i+1), _buttonPositionY);
+        buttonVector->addObject(_buttonList->at(i)->button);
     }
-    _buttonMenu = Menu::createWithArray(buttonVector);
-    _buttonMenu->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+    _buttonMenu = cocos2d::CCMenu::createWithArray(buttonVector);
+    _buttonMenu->setAnchorPoint(ccp(0.5f, 0.5f)/*Vec2::ANCHOR_MIDDLE*/);
     _buttonMenu->setPosition(0, 0);
     _backgroundSprite->addChild(_buttonMenu);
 }
 
 void PopupLayer::setString(const std::string &text)
 {
-    _popupText->setString(text);
+    _popupText->setString(text.c_str());
 }

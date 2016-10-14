@@ -6,22 +6,24 @@
 
 USING_NS_CC;
 
-class RadioButton : public Node
+class RadioButton : public cocos2d::CCNode
 {
 	std::vector<EasyButton*>* _radios;	//单选按钮组
 	int _selectedNumber;	//当前选中的按钮下标
 	int _tmpSelectedNumber;	//临时
 	EasyButton* _selectedButton;	//当前被选中的按钮
 	EasyButton* _tmpSelectedButton;	//临时储存被选中的按钮
+#if 0
 	EventListenerTouchOneByOne* _eventTouch;	//触碰事件
+#endif
 public:
 	RadioButton();
 	~RadioButton();
 	static RadioButton* createRadioButton(EasyButton* i, ...);
-	std::function<void()> touchEvent;
+	void (*touchEvent)();
 
-	void onTouchBegan(Touch *t, Event *e);
-	void onTouchEnded(Touch *t, Event *e, bool flag);
+	virtual void ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
+	virtual void ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
 
 	int getSelectedNumber();	//返回选择按钮下标
 	void setSelectedNumber(int selectedNumber);	//设置默认被选中的按钮

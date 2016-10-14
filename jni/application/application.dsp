@@ -322,6 +322,10 @@ SOURCE=.\Control\PopupLayer.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Control\PopupLayer.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Control\RadioButton.cpp
 # End Source File
 # Begin Source File

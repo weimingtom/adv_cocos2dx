@@ -106,15 +106,19 @@ void EasyButton::ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEve
 		_normal->setVisible(true);
 		_selected->setVisible(false);
 	}
+#if 0
 	if (flag)
 	{
 		touchEvent();
 	}
+#endif
 }
 
 void EasyButton::setEventTouchEnabled(bool flag)
 {
+#if 0
 	_eventTouch->setEnabled(flag);
+#endif
 }
 
 cocos2d::CCSprite* EasyButton::getNormal()

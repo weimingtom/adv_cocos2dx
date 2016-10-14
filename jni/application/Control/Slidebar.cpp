@@ -13,10 +13,12 @@ Slidebar::Slidebar(cocos2d::CCSprite* backgroundSprite, cocos2d::CCSprite* point
 	_minValue = 0.0f;
 	_targetValue = NULL;
 	_floatValue = 0.5f;
+#if 0
     _controlEvent = createControlEvent();
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_controlEvent, this);
 	touchEvent = [=](){};
 	moveEvent = [=](){};
+#endif
 }
 
 
@@ -26,21 +28,22 @@ Slidebar::~Slidebar()
 
 Slidebar* Slidebar::createSlidebar(std::string backgroundFile, std::string pointFile)
 {
-	auto tmpBackgroundSprite = Sprite::create(backgroundFile);
-	auto tmpPointSprite = Sprite::create(pointFile);
+	cocos2d::CCSprite * tmpBackgroundSprite = cocos2d::CCSprite::create(backgroundFile.c_str());
+	cocos2d::CCSprite * tmpPointSprite = cocos2d::CCSprite::create(pointFile.c_str());
 	if (tmpBackgroundSprite && tmpPointSprite)
 	{
-		auto tmpSlidebar = new Slidebar(tmpBackgroundSprite, tmpPointSprite);
+		Slidebar * tmpSlidebar = new Slidebar(tmpBackgroundSprite, tmpPointSprite);
 		return tmpSlidebar;
 	}
 	else
 	{
-		if (!tmpBackgroundSprite) log("Sliderbar background file (%s) not found.", backgroundFile.c_str());
-		if (!tmpPointSprite) log("Sliderbar point file (%s) not found.", pointFile.c_str());
-		return nullptr;
+		if (!tmpBackgroundSprite) CCLOG("Sliderbar background file (%s) not found.", backgroundFile.c_str());
+		if (!tmpPointSprite) CCLOG("Sliderbar point file (%s) not found.", pointFile.c_str());
+		return NULL;
 	}
 }
 
+#if 0
 EventListenerTouchOneByOne* Slidebar::createControlEvent()
 {
     auto et = EventListenerTouchOneByOne::create();
@@ -101,6 +104,7 @@ EventListenerTouchOneByOne* Slidebar::createControlEvent()
     
     return et;
 }
+#endif
 
 void Slidebar::setMaxWidth(float value)
 {
@@ -134,7 +138,7 @@ float Slidebar::getChange()
 
 void Slidebar::setSlidebar()
 {
-	_point->setPosition((_background->getPositionX() - _maxWidth) + _maxWidth * 2 * _change, _point->getPositionY());
+	_point->setPosition(ccp((_background->getPositionX() - _maxWidth) + _maxWidth * 2 * _change, _point->getPositionY()));
 	_pointPositionX = _point->getPositionX();
 }
 
@@ -142,7 +146,7 @@ void Slidebar::setFloat(float value)
 {
 	if (value > _maxValue || value < _minValue)
 	{
-		log("Bad value!");
+		CCLOG("Bad value!");
 		return;
 	}
 	_floatValue = value;
