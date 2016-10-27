@@ -286,11 +286,99 @@ SOURCE=.\ScriptReader\SoundManager.h
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=.\CharLabel.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CharLabel.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\GameScene.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\GameScene.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\GameSystem.cpp
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=.\GameSystem.h
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\History.cpp
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
 SOURCE=.\History.hpp
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\HistoryScene.cpp
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\HistoryScene.h
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\LoadScene.cpp
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\LoadScene.h
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\MainMenuScene.cpp
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\MainMenuScene.h
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\SaveData.cpp
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\SaveData.h
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\SaveScene.cpp
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\SaveScene.h
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\SettingScene.cpp
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\SettingScene.h
+# PROP Exclude_From_Build 1
 # End Source File
 # End Group
 # Begin Group "TestFolder"
