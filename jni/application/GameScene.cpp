@@ -1,7 +1,6 @@
 #include "GameScene.h"
-#if 0
-#include "ui/CocosGUI.h"
-#endif
+//#include "ui/CocosGUI.h"
+#include "cocos-ext.h"
 //#include "SimpleAudioEngine.h"
 #include "GameSystem.h"
 #include "ScriptReader/BackgroundManager.h"
@@ -138,12 +137,22 @@ bool GameScene::init()
 		"/ui/dialog/button_title_down.png");
 	buttonTitle->setPosition(ccp(1200, 220));
 
-	auto CBskip = ui::CheckBox::create("/ui/dialog/charbox_skip_off.png", "/ui/dialog/charbox_skip_off.png", "/ui/dialog/charbox_skip_on.png", "/ui/dialog/charbox_skip_off.png", "/ui/dialog/charbox_skip_on.png");
-	CBskip->setPosition(Vec2(1000, 125));
+	cocos2d::ui::CheckBox *CBskip = cocos2d::ui::CheckBox::create();
+	CBskip->loadTextures("/ui/dialog/charbox_skip_off.png", 
+		"/ui/dialog/charbox_skip_off.png", 
+		"/ui/dialog/charbox_skip_on.png", 
+		"/ui/dialog/charbox_skip_off.png", 
+		"/ui/dialog/charbox_skip_on.png");
+	CBskip->setPosition(ccp(1000, 125));
 	_dialogWindow->addChild(CBskip, 0);
 
-	auto CBauto = ui::CheckBox::create("/ui/dialog/charbox_auto_off.png", "/ui/dialog/charbox_auto_off.png", "/ui/dialog/charbox_auto_on.png", "/ui/dialog/charbox_auto_off.png", "/ui/dialog/charbox_auto_on.png");
-	CBauto->setPosition(Vec2(1000, 75));
+	cocos2d::ui::CheckBox *CBauto = cocos2d::ui::CheckBox::create();
+	CBauto->loadTextures("/ui/dialog/charbox_auto_off.png", 
+		"/ui/dialog/charbox_auto_off.png", 
+		"/ui/dialog/charbox_auto_on.png", 
+		"/ui/dialog/charbox_auto_off.png", 
+		"/ui/dialog/charbox_auto_on.png");
+	CBauto->setPosition(ccp(1000, 75));
 	/*
 	CBauto->onTouchEnded = [=](Touch *touch, Event *unusedEvent)
 	{
@@ -152,16 +161,14 @@ bool GameScene::init()
 	*/
 	_dialogWindow->addChild(CBauto, 1);
 
-	auto menu = Menu::create(buttonDict, buttonSave, buttonLoad, buttonLog, buttonConfig, buttonTitle, NULL);
-	menu->setPosition(Vec2::ZERO);
+	cocos2d::CCMenu *menu = cocos2d::CCMenu::create(buttonDict, buttonSave, buttonLoad, buttonLog, buttonConfig, buttonTitle, NULL);
+	menu->setPosition(ccp(0, 0));
 	this->addChild(menu, 13);
 
-	//选项层
-	_selectLayer = Layer::create();
+	cocos2d::CCLayer *_selectLayer = cocos2d::CCLayer::create();
 	this->addChild(_selectLayer, 13);
 
-
-	//监听器
+#if 0
 	auto clickEvent = EventListenerTouchOneByOne::create();
 	clickEvent->onTouchBegan = [=](Touch *t, Event *e)
 	{
@@ -180,6 +187,7 @@ bool GameScene::init()
 		return true;
 	};
 	_dialogWindow->getEventDispatcher()->addEventListenerWithSceneGraphPriority(dialogClickEvent, _dialogWindow);
+#endif
 
 	//创建ScriptReader对象
 	

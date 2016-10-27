@@ -73,9 +73,11 @@
 #include "CocoStudio/Components/CCComAudio.h"
 #include "CocoStudio/Components/CCComController.h"
 #include "CocoStudio/Components/CCComRender.h"
+#endif
 
 #include "CocoStudio/GUI/System/CocosGUI.h"
 
+#if 0
 #include "CocoStudio/Json/DictionaryHelper.h"
 
 #include "CocoStudio/Json/CocoLoader.h"

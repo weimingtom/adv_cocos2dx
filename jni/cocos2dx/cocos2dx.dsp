@@ -1389,6 +1389,272 @@ SOURCE=.\GUI\CCControlExtension\CCScale9Sprite.h
 # End Source File
 # End Group
 # End Group
+# Begin Group "extensions_CocoStudio"
+
+# PROP Default_Filter ""
+# Begin Group "Action"
+
+# PROP Default_Filter ""
+# End Group
+# Begin Group "ActionTimeline"
+
+# PROP Default_Filter ""
+# End Group
+# Begin Group "Armature"
+
+# PROP Default_Filter ""
+# End Group
+# Begin Group "Components"
+
+# PROP Default_Filter ""
+# End Group
+# Begin Group "GUI"
+
+# PROP Default_Filter ""
+# Begin Group "GUI_BaseClasses"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\BaseClasses\UIWidget.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\BaseClasses\UIWidget.h
+# End Source File
+# End Group
+# Begin Group "GUI_Layouts"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\Layouts\UILayout.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\Layouts\UILayout.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\Layouts\UILayoutDefine.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\Layouts\UILayoutDefine.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\Layouts\UILayoutParameter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\Layouts\UILayoutParameter.h
+# End Source File
+# End Group
+# Begin Group "GUI_System"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\System\CocosGUI.cpp
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\System\CocosGUI.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\System\GUIDefine.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\System\UIHelper.cpp
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\System\UIHelper.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\System\UITouchGroup.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\System\UITouchGroup.h
+# End Source File
+# End Group
+# Begin Group "GUI_UIWidgets"
+
+# PROP Default_Filter ""
+# Begin Group "GUI_UIWidgets_Compatible"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\Compatible\CompatibleClasses.h
+# End Source File
+# End Group
+# Begin Group "GUI_UIWidgets_ScrollWidget"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\ScrollWidget\UIListView.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\ScrollWidget\UIListView.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\ScrollWidget\UIPageView.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\ScrollWidget\UIPageView.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\ScrollWidget\UIScrollInterface.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\ScrollWidget\UIScrollView.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\ScrollWidget\UIScrollView.h
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UIButton.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UIButton.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UICheckBox.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UICheckBox.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UIImageView.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UIImageView.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UILabel.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UILabel.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UILabelAtlas.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UILabelAtlas.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UILabelBMFont.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UILabelBMFont.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UILoadingBar.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UILoadingBar.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UIRichText.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UIRichText.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UISlider.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UISlider.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UITextField.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\GUI\UIWidgets\UITextField.h
+# End Source File
+# End Group
+# End Group
+# Begin Group "Json"
+
+# PROP Default_Filter ""
+# End Group
+# Begin Group "Reader"
+
+# PROP Default_Filter ""
+# End Group
+# Begin Group "Trigger"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\CocoStudio\Trigger\ObjectFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Trigger\ObjectFactory.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Trigger\TriggerBase.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Trigger\TriggerBase.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Trigger\TriggerMng.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Trigger\TriggerMng.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Trigger\TriggerObj.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Trigger\TriggerObj.h
+# End Source File
+# End Group
+# End Group
 # Begin Source File
 
 SOURCE=.\CCCamera.cpp
