@@ -38,8 +38,10 @@ public:
 	void setFloat(float value);	
 	float getFloat();
 
-	void (*touchEvent) ();	//触碰事件
-	void (*moveEvent) ();	//移动事件
+	void (cocos2d::CCObject::*touchEvent) ();	//触碰事件
+	CCObject *touchEventObj;
+	void (cocos2d::CCObject::*moveEvent) ();	//移动事件
+	CCObject *moveEventObj;
 };
 
 #endif

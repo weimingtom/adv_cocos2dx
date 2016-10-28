@@ -20,7 +20,7 @@ public:
 
 	CREATE_FUNC(LoadScene);
 
-	void back();	//·µ»Ø
+	void back(CCObject *);	//·µ»Ø
 
 	void load(int i);	//¶Áµµ
 };

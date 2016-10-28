@@ -17,11 +17,11 @@ MainMenu::~MainMenu()
 {
 }
 
-Scene* MainMenu::createScene()
+cocos2d::CCScene* MainMenu::createScene()
 {
-	auto scene = Scene::create();
+	cocos2d::CCScene *scene = cocos2d::CCScene::create();
 
-	auto layer = MainMenu::create();
+	cocos2d::CCLayer *layer = MainMenu::create();
 
 	scene->addChild(layer);
 
@@ -30,43 +30,58 @@ Scene* MainMenu::createScene()
 
 bool MainMenu::init()
 {
-	if (!Layer::init())
+	if (!CCLayer::init())
 	{
 		return false;
 	}
 	//初始化系统信息
 	GameSystem::getInstance();
 
-	Size visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	//设定背景层
-	auto backgroundLayer = LayerColor::create(Color4B::BLACK);
-	auto backgroundEffect1 = Sprite::create("/ui/backgroundEffect/fullscreen_smoke.png");
-	auto backgroundEffect2 = Sprite::create("/ui/backgroundEffect/fullscreen_smoke_2.png");
-	backgroundEffect1->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-	backgroundEffect2->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+	cocos2d::CCSize visibleSize = cocos2d::CCDirector::sharedDirector()->getVisibleSize();
+	cocos2d::CCPoint origin = cocos2d::CCDirector::sharedDirector()->getVisibleOrigin();
+    //设定背景层
+	cocos2d::CCLayerColor *backgroundLayer = cocos2d::CCLayerColor::create(ccc4(0, 0, 0, 255));
+	cocos2d::CCSprite *backgroundEffect1 = cocos2d::CCSprite::create("/ui/backgroundEffect/fullscreen_smoke.png");
+	cocos2d::CCSprite *backgroundEffect2 = cocos2d::CCSprite::create("/ui/backgroundEffect/fullscreen_smoke_2.png");
+	backgroundEffect1->setPosition(ccp(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+	backgroundEffect2->setPosition(ccp(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	//logo
-	auto gameTitle = Sprite::create("/ui/game_title.png");
-	gameTitle->setPosition(Vec2(433, 358));
+	cocos2d::CCSprite *gameTitle = cocos2d::CCSprite::create("/ui/game_title.png");
+	gameTitle->setPosition(ccp(433, 358));
 
 	//菜单按钮
-	auto buttonNew = MenuItemImage::create("/ui/Title/button_new.png", "/ui/Title/button_new_down.png", CC_CALLBACK_0(MainMenu::newgame, this));
-	buttonNew->setPosition(Vec2(1114, visibleSize.height - 243));
+	cocos2d::CCMenuItemImage *buttonNew = cocos2d::CCMenuItemImage::create(
+		"/ui/Title/button_new.png", 
+		"/ui/Title/button_new_down.png", this, 
+		menu_selector(MainMenu::newgame));
+	buttonNew->setPosition(ccp(1114, visibleSize.height - 243));
 
-	auto buttonLoad = MenuItemImage::create("/ui/Title/button_load.png", "/ui/Title/button_load_down.png", CC_CALLBACK_0(MainMenu::load, this));
-	buttonLoad->setPosition(Vec2(1114, visibleSize.height - 293));
+	cocos2d::CCMenuItemImage *buttonLoad = cocos2d::CCMenuItemImage::create(
+		"/ui/Title/button_load.png", 
+		"/ui/Title/button_load_down.png", this, 
+		menu_selector(MainMenu::load));
+	buttonLoad->setPosition(ccp(1114, visibleSize.height - 293));
 
-	auto buttonCG = MenuItemImage::create("/ui/Title/button_cg.png", "/ui/Title/button_cg_down.png");
-	buttonCG->setPosition(Vec2(1114, visibleSize.height - 343));
+	cocos2d::CCMenuItemImage *buttonCG = cocos2d::CCMenuItemImage::create(
+		"/ui/Title/button_cg.png", 
+		"/ui/Title/button_cg_down.png");
+	buttonCG->setPosition(ccp(1114, visibleSize.height - 343));
 
-	auto buttonConfig = MenuItemImage::create("/ui/Title/button_config.png", "/ui/Title/button_config_down.png",CC_CALLBACK_0(MainMenu::config, this));
-	buttonConfig->setPosition(Vec2(1114, visibleSize.height - 393));
+	cocos2d::CCMenuItemImage *buttonConfig = cocos2d::CCMenuItemImage::create(
+		"/ui/Title/button_config.png", 
+		"/ui/Title/button_config_down.png", this, 
+		menu_selector(MainMenu::config));
+	buttonConfig->setPosition(ccp(1114, visibleSize.height - 393));
 
-	auto buttonExit = MenuItemImage::create("/ui/Title/button_exit.png", "/ui/Title/button_exit_down.png",CC_CALLBACK_1(MainMenu::menuExit, this));
-	buttonExit->setPosition(Vec2(1114, visibleSize.height - 443)); 
+	cocos2d::CCMenuItemImage *buttonExit = cocos2d::CCMenuItemImage::create(
+		"/ui/Title/button_exit.png", 
+		"/ui/Title/button_exit_down.png", this,
+		menu_selector(MainMenu::menuExit));
+	buttonExit->setPosition(ccp(1114, visibleSize.height - 443)); 
 
-	auto menu = Menu::create(buttonNew, buttonLoad, buttonCG, buttonConfig, buttonExit, NULL);
-	menu->setPosition(Vec2::ZERO);
+	cocos2d::CCMenu *menu = cocos2d::CCMenu::create(
+		buttonNew, buttonLoad, buttonCG, buttonConfig, buttonExit, NULL);
+	menu->setPosition(ccp(0, 0));
 
 
 
@@ -83,38 +98,38 @@ bool MainMenu::init()
 
 void MainMenu::test()
 {
-	log("Bingo!");
+	CCLOG("Bingo!");
 }
 
-void MainMenu::menuExit(Ref* pSender)
+void MainMenu::menuExit(cocos2d::CCObject* pSender)
 {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
 	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.", "Alert");
 	return;
 #endif
 
-	Director::getInstance()->end();
+	cocos2d::CCDirector::sharedDirector()->end();
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
 	exit(0);
 #endif
 }
 
-void MainMenu::newgame()
+void MainMenu::newgame(cocos2d::CCObject *)
 {
 	GameSystem::getInstance()->setGameScene(GameScene::createScene());
-	auto scene = GameSystem::getInstance()->getGameScene();
-	Director::getInstance()->replaceScene(scene);
+	cocos2d::CCScene *scene = GameSystem::getInstance()->getGameScene();
+	cocos2d::CCDirector::sharedDirector()->replaceScene(scene);
 }
 
-void MainMenu::config()
+void MainMenu::config(cocos2d::CCObject *)
 {
-	Director::getInstance()->pushScene(Director::getInstance()->getRunningScene());
-	Director::getInstance()->replaceScene(SettingScene::createScene());
+	cocos2d::CCDirector::sharedDirector()->pushScene(cocos2d::CCDirector::sharedDirector()->getRunningScene());
+	cocos2d::CCDirector::sharedDirector()->replaceScene(SettingScene::createScene());
 }
 
-void MainMenu::load()
+void MainMenu::load(cocos2d::CCObject *)
 {
-	Director::getInstance()->pushScene(Director::getInstance()->getRunningScene());
-	Director::getInstance()->replaceScene(LoadScene::createScene());
+	cocos2d::CCDirector::sharedDirector()->pushScene(cocos2d::CCDirector::sharedDirector()->getRunningScene());
+	cocos2d::CCDirector::sharedDirector()->replaceScene(LoadScene::createScene());
 }

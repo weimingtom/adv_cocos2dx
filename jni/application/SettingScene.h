@@ -6,7 +6,7 @@
 USING_NS_CC;
 
 
-class SettingScene : public Layer
+class SettingScene : public cocos2d::CCLayer
 {
 	//单选按钮组
 	RadioButton* _testRadio;
@@ -21,13 +21,13 @@ public:
 	SettingScene();
 	~SettingScene();
 
-	static Scene* createScene();
+	static cocos2d::CCScene* createScene();
 
 	virtual bool init();
 
 	CREATE_FUNC(SettingScene);
 
-	void back();	//返回
+	void back(CCObject *);	//返回
 	void test();	//测试方法
 	void changeMusicVolume();
 };

@@ -8,7 +8,7 @@
 
 #include "History.hpp"
 
-HistoryLogger* HistoryLogger::_instance = nullptr;
+HistoryLogger* HistoryLogger::_instance = NULL;
 
 HistoryLogger::HistoryLogger()
     : _maximum(MAXIMUM)
@@ -16,7 +16,7 @@ HistoryLogger::HistoryLogger()
     //_records = new record[MAXIMUM];
 	for (int i = 0; i < MAXIMUM; i++)
 	{
-		_records[i] = nullptr;
+		_records[i] = NULL;
 	}
 	_currentLog = 0;
 }
@@ -43,40 +43,40 @@ void HistoryLogger::destoryInstance()
     if (_instance)
     {
         delete _instance;
-        _instance = nullptr;
+        _instance = NULL;
     }
 }
 
-record* HistoryLogger::createRecord(std::string type, std::string text, std::string name, Color4B color)
+record* HistoryLogger::createRecord(std::string type, std::string text, std::string name, cocos2d::ccColor4B color)
 {
 	/*将type从string转成recordType*/
     recordType tmpType;
 	if (type.compare("null") == 0)
 	{
-		tmpType = recordType::null;
+		tmpType = null;
 	}
 	else if (type.compare("talk") == 0)
 	{
-		tmpType = recordType::talk;
+		tmpType = talk;
 	}
 	else if (type.compare("select") == 0)
 	{
-		tmpType = recordType::selecte;
+		tmpType = selecte;
 	}
 
     record* tmpRecord = new record(tmpType, text, name, color);
 	return tmpRecord;
 }
 
-void HistoryLogger::addRecord(std::string type, std::string text, std::string name, Color4B color)
+void HistoryLogger::addRecord(std::string type, std::string text, std::string name, cocos2d::ccColor4B color)
 {
-	auto record = createRecord(type, text, name, color);
+	record *record = createRecord(type, text, name, color);
 	addRecord(record);
 }
 
 void HistoryLogger::addRecord(record* record)
 {
-	if (_records[_currentLog] == nullptr)
+	if (_records[_currentLog] == NULL)
 	{
 		_records[_currentLog] = record;
 		_currentLog++;

@@ -20,7 +20,8 @@ public:
 	RadioButton();
 	~RadioButton();
 	static RadioButton* createRadioButton(EasyButton* i, ...);
-	void (*touchEvent)();
+	void (cocos2d::CCObject::*touchEvent)();
+	cocos2d::CCObject *touchEventObj;
 
 	virtual void ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
 	virtual void ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);

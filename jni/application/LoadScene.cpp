@@ -11,11 +11,11 @@ LoadScene::~LoadScene()
 {
 }
 
-Scene* LoadScene::createScene()
+cocos2d::CCScene* LoadScene::createScene()
 {
-	auto scene = Scene::create();
+	cocos2d::CCScene *scene = cocos2d::CCScene::create();
 
-	auto layer = LoadScene::create();
+	LoadScene *layer = LoadScene::create();
 
 	scene->addChild(layer);
 
@@ -24,36 +24,40 @@ Scene* LoadScene::createScene()
 
 bool LoadScene::init()
 {
-	if (!Layer::init())
+	if (!CCLayer::init())
 	{
 		return false;
 	}
 
-	Size visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
-	auto stageLayer = Layer::create();
+	cocos2d::CCSize visibleSize = cocos2d::CCDirector::sharedDirector()->getVisibleSize();
+	cocos2d::CCPoint origin = cocos2d::CCDirector::sharedDirector()->getVisibleOrigin();
+    
+	cocos2d::CCLayer *stageLayer = cocos2d::CCLayer::create();
 
 	/*加载背景*/
-	auto backgroundLayer = LayerColor::create(Color4B::BLACK);
+	cocos2d::CCLayerColor *backgroundLayer = cocos2d::CCLayerColor::create(ccc4(0, 0, 0, 255));
 	stageLayer->addChild(backgroundLayer);
 
-	auto backgroundImage = Sprite::create("/ui/backgroundEffect/fullscreen_smoke.png");
-	backgroundImage->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+	cocos2d::CCSprite *backgroundImage = cocos2d::CCSprite::create("/ui/backgroundEffect/fullscreen_smoke.png");
+	backgroundImage->setPosition(ccp(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	stageLayer->addChild(backgroundImage);
 
-	auto backgroundWindow = Sprite::create("/ui/saveload/window_bg.png");
-	backgroundWindow->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+	cocos2d::CCSprite *backgroundWindow = cocos2d::CCSprite::create("/ui/saveload/window_bg.png");
+	backgroundWindow->setPosition(ccp(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	stageLayer->addChild(backgroundWindow);
 
 	/*加载按钮*/
 
 	dataButtons[8];
+#if 0
 	eventTouch[8];
-	for (int i = 0; i < 4; i++)
+#endif
+	int i;
+	for (/*int*/ i = 0; i < 4; i++)
 	{
 		dataButtons[i] = SaveData::create(i);
 		dataButtons[i]->setPosition(425, 520 - 115 * i);
+#if 0
 		eventTouch[i] = EventListenerTouchOneByOne::create();
 		eventTouch[i]->onTouchBegan = [=](Touch *t, Event *e)
 		{
@@ -75,13 +79,15 @@ bool LoadScene::init()
 			}
 		};
 		this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventTouch[i], this);
+#endif
 		stageLayer->addChild(dataButtons[i]);
 	}
-	for (int i = 4; i < 8; i++)
+	for (/*int*/ i = 4; i < 8; i++)
 	{
 		dataButtons[i] = SaveData::create(i);
 		dataButtons[i]->setPosition(850, 520 - 115 * (i - 4));
 
+#if 0
 		eventTouch[i] = EventListenerTouchOneByOne::create();
 		eventTouch[i]->onTouchBegan = [=](Touch *t, Event *e)
 		{
@@ -101,16 +107,21 @@ bool LoadScene::init()
 			{
 			}
 		};
-		this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventTouch[i], this);		stageLayer->addChild(dataButtons[i]);
+		this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventTouch[i], this);
+#endif
+		stageLayer->addChild(dataButtons[i]);
 	}
 
 
 
 	//返回按钮
-	auto buttonBack = MenuItemImage::create("/ui/button_return.png", "/ui/button_return_down.png", CC_CALLBACK_0(LoadScene::back, this));
-	buttonBack->setPosition(Vec2(175, 90));
-	auto menu = Menu::create(buttonBack, NULL);
-	menu->setPosition(Vec2::ZERO);
+	cocos2d::CCMenuItemImage *buttonBack = cocos2d::CCMenuItemImage::create(
+		"/ui/button_return.png", 
+		"/ui/button_return_down.png", this,
+		menu_selector(LoadScene::back));
+	buttonBack->setPosition(ccp(175, 90));
+	cocos2d::CCMenu *menu = cocos2d::CCMenu::create(buttonBack, NULL);
+	menu->setPosition(ccp(0, 0));
 	stageLayer->addChild(menu);
 
 
@@ -118,21 +129,21 @@ bool LoadScene::init()
 	return true;
 }
 
-void LoadScene::back()
+void LoadScene::back(CCObject *)
 {
 	//GameSystem::getInstance()->initGameSavedataList();
-	Director::getInstance()->popScene();
+	cocos2d::CCDirector::sharedDirector()->popScene();
 }
 
 void LoadScene::load(int i)
 {
-	log("loadsave = %d", i + 1);
+	CCLOG("loadsave = %d", i + 1);
 	GameSystem::getInstance()->setIsLoadSuccess(GameSystem::getInstance()->loadGameSceneInfo(i));
 	if (GameSystem::getInstance()->getGameScene())
 	{
-		Director::getInstance()->popScene();
+		cocos2d::CCDirector::sharedDirector()->popScene();
 	}
 	GameSystem::getInstance()->setGameScene(GameScene::createScene());
-	auto scene = GameSystem::getInstance()->getGameScene();
-	Director::getInstance()->replaceScene(scene);
+	cocos2d::CCScene *scene = GameSystem::getInstance()->getGameScene();
+	cocos2d::CCDirector::sharedDirector()->replaceScene(scene);
 }

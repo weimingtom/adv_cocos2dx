@@ -20,7 +20,7 @@ public:
 
 	CREATE_FUNC(SaveScene);
 
-	void back();	//·µ»Ø
+	void back(cocos2d::CCObject *);	//·µ»Ø
 
 	void save(int i);	//´æµµ
 };

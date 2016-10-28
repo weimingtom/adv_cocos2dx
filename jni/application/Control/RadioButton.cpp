@@ -85,7 +85,7 @@ void RadioButton::ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEv
 void RadioButton::ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
 {
 	//log("ButtonNumber: %d", _selectedNumber);
-	touchEvent();
+	(this->touchEventObj->*touchEvent)();
 }
 
 int RadioButton::getSelectedNumber()

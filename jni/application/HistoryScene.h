@@ -27,6 +27,6 @@ public:
 
 	CREATE_FUNC(HistoryScene);
 
-	void back();
+	void back(CCObject *);
 };
 

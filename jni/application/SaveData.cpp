@@ -17,9 +17,9 @@ SaveData::SaveData(int number, std::string imageFile, std::string text, std::str
 }
 
 SaveData::SaveData(int i)
-	: _dataImage(nullptr)
-	, _dataDate(nullptr)
-	, _dataText(nullptr)
+	: _dataImage(NULL)
+	, _dataDate(NULL)
+	, _dataText(NULL)
 {
 	/*加载按钮底层*/
 	/*
@@ -27,20 +27,23 @@ SaveData::SaveData(int i)
 	_stageLayer->setContentSize(Size(400,110));
 	_stageLayer->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	*/
-	_stageLayer = Sprite::create("/ui/saveload/noselected_bg.png");
+	_stageLayer = cocos2d::CCSprite::create("/ui/saveload/noselected_bg.png");
 	
 	_number = i;
 
 	updataData();
 
+#if 0
 	onTouchEnded = [=](int i){};
+#endif
 	//this->setTouchEnabled(true);
 
-	auto touchImage = Sprite::create("/ui/saveload/selected_bg.png");
-	touchImage->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+	cocos2d::CCSprite *touchImage = cocos2d::CCSprite::create("/ui/saveload/selected_bg.png");
+	touchImage->setAnchorPoint(ccp(0.0f, 0.0f));
 	touchImage->setVisible(false);
 	_stageLayer->addChild(touchImage);
 
+#if 0
 	auto eventTouch = EventListenerTouchOneByOne::create();
 
 	eventTouch->onTouchBegan = [=](Touch *t, Event *e)
@@ -68,6 +71,7 @@ SaveData::SaveData(int i)
 	};
 
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventTouch, this);
+#endif
 
 	this->addChild(_stageLayer);
 }
@@ -78,13 +82,13 @@ SaveData::~SaveData()
 
 SaveData* SaveData::create(int i)
 {
-	auto tmpSavedata = new SaveData(i);
+	SaveData *tmpSavedata = new SaveData(i);
 	return tmpSavedata;
 }
 
 void SaveData::updataData()
 {
-	auto savedata = GameSystem::getInstance()->getGameSavedata(_number);
+	GameSaveData *savedata = GameSystem::getInstance()->getGameSavedata(_number);
 	bool isNeedReloadImageFile = false;
 	if (_dataImage)
 	{
@@ -107,34 +111,35 @@ void SaveData::updataData()
 		std::string imageFile = savedata->imageFile;
 		if (isNeedReloadImageFile)
 		{
-			Director::getInstance()->getTextureCache()->reloadTexture(imageFile);
-			_dataImage = Sprite::createWithTexture(GameSystem::getInstance()->getScreenShoot()->getSprite()->getTexture());
-			_dataImage->setScale(1, -1);
+			cocos2d::CCTextureCache::sharedTextureCache()->reloadTexture(imageFile.c_str());
+			_dataImage = cocos2d::CCSprite::createWithTexture(GameSystem::getInstance()->getScreenShoot()->getSprite()->getTexture());
+			_dataImage->setScaleX(1);
+			_dataImage->setScaleY(-1); //FIXME:
 		}
 		else
-			_dataImage = Sprite::create(imageFile);
+			_dataImage = cocos2d::CCSprite::create(imageFile.c_str());
 		if (_dataImage)
 		{
 			
 			//_dataImage->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
-			_dataImage->setPosition(80, 55);
+			_dataImage->setPosition(ccp(80, 55));
 			_stageLayer->addChild(_dataImage);
 		}
 
 		/*显示存档信息*/
 		std::string text = savedata->text;
 
-		_dataText = Label::createWithSystemFont(text, "黑体", 20);
-		_dataText->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
-		_dataText->setPosition(160, 35);
+		_dataText = cocos2d::CCLabelTTF::create(text.c_str(), "黑体", 20);
+		_dataText->setAnchorPoint(ccp(0.0f, 0.5f));
+		_dataText->setPosition(ccp(160, 35));
 		_stageLayer->addChild(_dataText);
 
 		/*显示存档日期*/
 		std::string date = savedata->date;
 
-		_dataDate = Label::createWithSystemFont(date, "黑体", 20);
-		_dataDate->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
-		_dataDate->setPosition(160, 65);
+		_dataDate = cocos2d::CCLabelTTF::create(date.c_str(), "黑体", 20);
+		_dataDate->setAnchorPoint(ccp(0.0f, 0.5f));
+		_dataDate->setPosition(ccp(160, 65));
 		_stageLayer->addChild(_dataDate);
 
 		/*显示存档备注*/
@@ -151,15 +156,15 @@ void SaveData::updataData()
 		*/
 
 		/*显示存档截图*/
-		_dataImage = Sprite::create("/ui/saveload/pic_bg.png");
-		_dataImage->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
-		_dataImage->setPosition(15, 101);
+		_dataImage = cocos2d::CCSprite::create("/ui/saveload/pic_bg.png");
+		_dataImage->setAnchorPoint(ccp(0.0f, 1.0f));
+		_dataImage->setPosition(ccp(15, 101));
 		_stageLayer->addChild(_dataImage);
 
 		/*显示存档日期*/
-		_dataDate = Label::createWithSystemFont("-/-/- --:--", "黑体", 20);
-		_dataDate->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
-		_dataDate->setPosition(170, 65);
+		_dataDate = cocos2d::CCLabelTTF::create("-/-/- --:--", "黑体", 20);
+		_dataDate->setAnchorPoint(ccp(0.0f, 0.5f));
+		_dataDate->setPosition(ccp(170, 65));
 		_stageLayer->addChild(_dataDate);
 
 		/*显示存档备注*/
@@ -167,7 +172,7 @@ void SaveData::updataData()
 	}
 }
 
-Sprite* SaveData::getStageLayer()
+cocos2d::CCSprite* SaveData::getStageLayer()
 {
 	//log("data Number = %d", _number);
 	return _stageLayer;

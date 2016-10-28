@@ -126,4 +126,12 @@ cocos2d::CCSprite* EasyButton::getNormal()
 	return _normal;
 }
 
+
+//FIXME:
+void EasyButton::ccTouchesMoved(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
+{
+
+}
+
 #endif
+

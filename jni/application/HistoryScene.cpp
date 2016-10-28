@@ -1,16 +1,16 @@
 #include "HistoryScene.h"
 
-HistoryMessage::HistoryMessage(std::string text, std::string name, Color4B color)
+HistoryMessage::HistoryMessage(std::string text, std::string name, cocos2d::ccColor4B color)
 {
-	_nameLabel = Label::createWithSystemFont(name, "黑体", 20);
-	_nameLabel->setColor(Color3B::WHITE);
-	_nameLabel->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
-	_nameLabel->setPosition(Vec2(-265, 12));
+	_nameLabel = cocos2d::CCLabelTTF::create(name.c_str(), "黑体", 20);
+	_nameLabel->setColor(ccWHITE);
+	_nameLabel->setAnchorPoint(ccp(0.0f, 0.5f));
+	_nameLabel->setPosition(ccp(-265, 12));
 	this->addChild(_nameLabel);
 
-	_textLabel = Label::createWithSystemFont(text, "黑体", 20);
-	_textLabel->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
-	_textLabel->setPosition(Vec2(-265, -12));
+	_textLabel = cocos2d::CCLabelTTF::create(text.c_str(), "黑体", 20);
+	_textLabel->setAnchorPoint(ccp(0.0f, 0.5f));
+	_textLabel->setPosition(ccp(-265, -12));
 	this->addChild(_textLabel);
 }
 
@@ -21,10 +21,10 @@ HistoryMessage::~HistoryMessage()
 
 HistoryMessage* HistoryMessage::create(record* record)
 {
-	auto text = record->text;
-	auto name = record->name;
-	auto color = record->color;
-	auto tmpHM = new HistoryMessage(text, name, color);
+	std::string text = record->text;
+	std::string name = record->name;
+	cocos2d::ccColor4B color = record->color;
+	HistoryMessage *tmpHM = new HistoryMessage(text, name, color);
 	return tmpHM;
 }
 
@@ -37,11 +37,11 @@ HistoryScene::~HistoryScene()
 {
 }
 
-Scene* HistoryScene::createScene()
+cocos2d::CCScene* HistoryScene::createScene()
 {
-	auto scene = Scene::create();
+	cocos2d::CCScene* scene = cocos2d::CCScene::create();
 
-	auto layer = HistoryScene::create();
+	HistoryScene *layer = HistoryScene::create();
 
 	scene->addChild(layer);
 
@@ -50,40 +50,40 @@ Scene* HistoryScene::createScene()
 
 bool HistoryScene::init()
 {
-	if (!Layer::init())
+	if (!CCLayer::init())
 	{
 		return false;
 	}
 
-	Size visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
-	auto stageLayer = Layer::create();
+	cocos2d::CCSize visibleSize = cocos2d::CCDirector::sharedDirector()->getVisibleSize();
+	cocos2d::CCPoint origin = cocos2d::CCDirector::sharedDirector()->getVisibleOrigin();
+    
+	cocos2d::CCLayer *stageLayer = cocos2d::CCLayer::create();
 
 	/*加载背景*/
-	auto backgroundLayer = LayerColor::create(Color4B::BLACK);
+	cocos2d::CCLayerColor *backgroundLayer = cocos2d::CCLayerColor::create(ccc4(0, 0, 0, 255));//FIXME:
 	stageLayer->addChild(backgroundLayer);
 
-	auto backgroundImage = Sprite::create("/ui/backgroundEffect/fullscreen_smoke.png");
-	backgroundImage->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+	cocos2d::CCSprite* backgroundImage = cocos2d::CCSprite::create("/ui/backgroundEffect/fullscreen_smoke.png");
+	backgroundImage->setPosition(ccp(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	stageLayer->addChild(backgroundImage);
 
 	/*加载历史记录*/
-	auto historyList = Sprite::create();
+	cocos2d::CCSprite *historyList = cocos2d::CCSprite::create();
 	int startY = 0;
 	for (int i = 0; i < HistoryLogger::getInstance()->getLength(); i++)
 	{
 		//log("i = %d", i);
-		auto record = HistoryLogger::getInstance()->getRecord(i);
-		log("Record[%d] = [%s , %s]", i, record->name.c_str(), record->text.c_str());
-		auto hm = HistoryMessage::create(record);
-		hm->setAnchorPoint(Vec2::ANCHOR_MIDDLE_TOP);
+		record* record = HistoryLogger::getInstance()->getRecord(i);
+		CCLOG("Record[%d] = [%s , %s]", i, record->name.c_str(), record->text.c_str());
+		HistoryMessage *hm = HistoryMessage::create(record);
+		hm->setAnchorPoint(ccp(0.5f, 1.0f));
 		hm->setPosition(visibleSize.width / 2, startY);
 		historyList->addChild(hm);
 		startY -= hm->getContentSize().height + 50;
 
 	}
-	historyList->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+	historyList->setPosition(ccp(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	stageLayer->addChild(historyList);
 
 	/*给历史记录添加触碰事件*/
@@ -122,10 +122,13 @@ bool HistoryScene::init()
 	*/
 
 	//返回按钮
-	auto buttonBack = MenuItemImage::create("/ui/button_return.png", "/ui/button_return_down.png", CC_CALLBACK_0(HistoryScene::back, this));
-	buttonBack->setPosition(Vec2(175, 90)); 
-	auto menu = Menu::create(buttonBack, NULL);
-	menu->setPosition(Vec2::ZERO);
+	cocos2d::CCMenuItemImage *buttonBack = cocos2d::CCMenuItemImage::create(
+		"/ui/button_return.png", 
+		"/ui/button_return_down.png", this,
+		menu_selector(HistoryScene::back));
+	buttonBack->setPosition(ccp(175, 90)); 
+	cocos2d::CCMenu *menu = cocos2d::CCMenu::create(buttonBack, NULL);
+	menu->setPosition(ccp(0, 0));
 	stageLayer->addChild(menu);
 
 	
@@ -135,7 +138,7 @@ bool HistoryScene::init()
 	return true;
 }
 
-void HistoryScene::back()
+void HistoryScene::back(CCObject *)
 {
-	Director::getInstance()->popScene();
+	cocos2d::CCDirector::sharedDirector()->popScene();
 }
