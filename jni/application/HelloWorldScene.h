@@ -14,6 +14,8 @@ public:
     
     // a selector callback
     void menuCloseCallback(cocos2d::CCObject* pSender);
+	// Set myself
+	void menuTestButton(cocos2d::CCObject* pSender);
     
     // implement the "static node()" method manually
     CREATE_FUNC(HelloWorld);
