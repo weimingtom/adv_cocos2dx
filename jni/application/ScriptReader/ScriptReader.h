@@ -92,16 +92,26 @@ public:
 	
 	void initWithStage(cocos2d::CCNode* stage);	//初始化数据
 
-	void (*showText) (std::string &text);	//显示文本回调
-	void (*showName) (std::string &text);	//显示名称回调
-	void (*changeBackground) (std::string &background);	//切换背景图片
-	void (*playBackgroundMusic) (std::string &file);		//播放背景音乐
-	void (*stopBackgroundMusic) ();						//停止背景音乐
-	void (*playSound) (std::string &file);				//播放音效
-	void (*stopSound) ();								//停止音效
-	void (*showCharator) (std::string &cName, std::string &face);	//显示立绘
-	void (*hideCharator) (std::string &name);	//隐藏立绘
-	void (*showSelect) (std::map<std::string, std::string>);	//显示选项
+	void (CCObject::*showText) (std::string &text);	//显示文本回调
+	CCObject *showTextObj;
+	void (CCObject::*showName) (std::string &text);	//显示名称回调
+	CCObject *showNameObj;
+	void (CCObject::*changeBackground) (std::string &background);	//切换背景图片
+	CCObject *changeBackgroundObj;
+	void (CCObject::*playBackgroundMusic) (std::string &file);		//播放背景音乐
+	CCObject *playBackgroundMusicObj;
+	void (CCObject::*stopBackgroundMusic) ();						//停止背景音乐
+	CCObject *stopBackgroundMusicObj;
+	void (CCObject::*playSound) (std::string &file);				//播放音效
+	CCObject *playSoundObj;
+	void (CCObject::*stopSound) ();								//停止音效
+	CCObject *stopSoundObj;
+	void (CCObject::*showCharator) (std::string &cName, std::string &face);	//显示立绘
+	CCObject *showCharatorObj;
+	void (CCObject::*hideCharator) (std::string &name);	//隐藏立绘
+	CCObject *hideCharatorObj;
+	void (CCObject::*showSelect) (std::map<std::string, std::string>&);	//显示选项
+	CCObject *showSelectObj;
 
 	void loadScriptFile(std::string path);	//载入脚本数据
 	void clearScript();	//清理脚本数据

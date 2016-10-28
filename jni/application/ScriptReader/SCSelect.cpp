@@ -46,5 +46,5 @@ void ScriptReader::SCSelect::execute(cocos2d::CCNode* stage)
 	stage->addChild(menu, 13);
 	*/
 
-	reader->showSelect(options);
+	(reader->showSelectObj->*reader->showSelect)(options);
 }

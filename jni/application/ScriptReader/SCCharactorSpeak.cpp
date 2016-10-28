@@ -24,15 +24,15 @@ void ScriptReader::SCCharactorSpeak::execute(cocos2d::CCNode* stage)
 	if (cName.compare("") != 0)
 	{
 		cha = CM->getCharactor(cName);
-		reader->showCharator(cName, face);
-		reader->showName(cha->name);
+		(reader->showCharatorObj->*reader->showCharator)(cName, face);
+		(reader->showNameObj->*reader->showName)(cha->name);
 	}
 	else
 	{
 		isName = false;
-		reader->showName((std::string)"");
+		(reader->showNameObj->*reader->showName)((std::string)"");
 	}
-	reader->showText(text);
+	(reader->showTextObj->*reader->showText)(text);
 	if (isName)
 	{
 		HistoryLogger::getInstance()->addRecord("talk", text, cha->name);

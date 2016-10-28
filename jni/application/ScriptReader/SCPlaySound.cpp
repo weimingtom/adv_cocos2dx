@@ -22,7 +22,7 @@ void ScriptReader::SCPlaySound::execute(cocos2d::CCNode* stage)
 	}
 	else
 	{
-		reader->playSound(sound);
+		(reader->playSoundObj->*reader->playSound)(sound);
 	}
 
 	reader->nextScript();

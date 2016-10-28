@@ -17,6 +17,6 @@ ScriptReader::SCBackground::~SCBackground()
 
 void ScriptReader::SCBackground::execute(cocos2d::CCNode* stage)
 {
-	reader->changeBackground(key);
+	(reader->changeBackgroundObj->*reader->changeBackground)(key);
 	reader->nextScript();
 }

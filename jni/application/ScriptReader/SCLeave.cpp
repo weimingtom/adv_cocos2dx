@@ -126,6 +126,6 @@ void ScriptReader::SCLeave::execute(cocos2d::CCNode* stage)
 			);
 	}
 	*/
-	reader->hideCharator(cName);
+	(reader->hideCharatorObj->*reader->hideCharator)(cName);
 	reader->nextScript();
 }

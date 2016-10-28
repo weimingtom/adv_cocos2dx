@@ -193,17 +193,27 @@ bool GameScene::init()
 	
 	ScriptReader::getInstance()->initWithStage(stageLayer);
 	//绑定reader功能
-	ScriptReader::getInstance()->showText = CC_CALLBACK_1(GameScene::showText, this);
-	ScriptReader::getInstance()->showName = CC_CALLBACK_1(GameScene::showName, this);
-	ScriptReader::getInstance()->changeBackground = CC_CALLBACK_1(GameScene::changeBackground, this);
-	ScriptReader::getInstance()->playBackgroundMusic = CC_CALLBACK_1(GameScene::playBackgroundMusic, this);
-	ScriptReader::getInstance()->stopBackgroundMusic = CC_CALLBACK_0(GameScene::stopBackgroundMusic, this);
-	ScriptReader::getInstance()->playSound = CC_CALLBACK_1(GameScene::playSound, this);
-	ScriptReader::getInstance()->stopSound = CC_CALLBACK_0(GameScene::stopSound, this);
-	ScriptReader::getInstance()->showCharator = CC_CALLBACK_2(GameScene::displayCharator, this);
-	ScriptReader::getInstance()->hideCharator = CC_CALLBACK_1(GameScene::unDisplayCharator, this);
-	ScriptReader::getInstance()->showSelect = CC_CALLBACK_1(GameScene::showSelect, this);
-
+	ScriptReader::getInstance()->showText = (void (CCObject::*)(std::string &text)) &GameScene::showText;
+	ScriptReader::getInstance()->showTextObj = this;
+	ScriptReader::getInstance()->showName = (void (CCObject::*)(std::string &name)) &GameScene::showName;
+	ScriptReader::getInstance()->showNameObj = this;
+	ScriptReader::getInstance()->changeBackground = (void (CCObject::*)(std::string &key)) &GameScene::changeBackground;
+	ScriptReader::getInstance()->changeBackgroundObj = this;
+	ScriptReader::getInstance()->playBackgroundMusic = (void (CCObject::*)(std::string &key)) &GameScene::playBackgroundMusic;
+	ScriptReader::getInstance()->playBackgroundMusicObj = this;
+	ScriptReader::getInstance()->stopBackgroundMusic = (void (CCObject::*)()) &GameScene::stopBackgroundMusic;
+	ScriptReader::getInstance()->stopBackgroundMusicObj = this;
+	ScriptReader::getInstance()->playSound = (void (CCObject::*)(std::string &file)) &GameScene::playSound;
+	ScriptReader::getInstance()->playSoundObj = this;
+	ScriptReader::getInstance()->stopSound = (void (CCObject::*)()) &GameScene::stopSound;
+	ScriptReader::getInstance()->stopSoundObj = this;
+	ScriptReader::getInstance()->showCharator = (void (CCObject::*)(std::string &cName, std::string &face)) &GameScene::displayCharator;
+	ScriptReader::getInstance()->showCharatorObj = this;
+	ScriptReader::getInstance()->hideCharator = (void (CCObject::*)(std::string &cName)) &GameScene::unDisplayCharator;
+	ScriptReader::getInstance()->hideCharatorObj = this;
+	ScriptReader::getInstance()->showSelect = (void (CCObject::*)(std::map<std::string, std::string> &options)) &GameScene::showSelect;
+	ScriptReader::getInstance()->showSelectObj = this;
+	
 	ScriptReader::getInstance()->loadScriptFile("/scenario/TestII.txt");
 
 	if (!GameSystem::getInstance()->getIsLoadSuccess())
@@ -226,7 +236,7 @@ void GameScene::update(float dt)
 
 void GameScene::updateLabel(std::string text)
 {
-	_label->setString(text);
+	_label->setString(text.c_str());
 }
 
 void GameScene::showClickSign()
@@ -247,7 +257,7 @@ void GameScene::dialogClicked()
 void GameScene::showName(std::string &name)
 {
 	_currentName = name;
-	_nameLabel->setString(name);
+	_nameLabel->setString(name.c_str());
 }
 
 void GameScene::showText(std::string &text)
@@ -257,13 +267,14 @@ void GameScene::showText(std::string &text)
 }
 void GameScene::changeBackground(std::string &key)
 {
-	auto background = BM->getBackground(key);
+	std::string background = BM->getBackground(key);
 	if (background.compare("") == 0) return;	//如果找不到就退出
 	_backgroundKey = key;
-	auto backgroundSprite = Sprite::create(background);
-	backgroundSprite->setAnchorPoint(Vec2(0, 0));
+	cocos2d::CCSprite *backgroundSprite = cocos2d::CCSprite::create(background.c_str());
+	backgroundSprite->setAnchorPoint(ccp(0, 0));
 	backgroundSprite->setOpacity(0);
 	_backgroundLayer->addChild(backgroundSprite);
+#if 0
 	backgroundSprite->runAction(Sequence::createWithTwoActions(FadeIn::create(1.0f), CallFunc::create([&]()
 	{
 		if (_backgroundSprite)
@@ -279,15 +290,16 @@ void GameScene::changeBackground(std::string &key)
 	}
 		)
 		));
+#endif
 }
 
 void GameScene::playBackgroundMusic(std::string &key)
 {
 	stopBackgroundMusic();
-	auto bgm = BMM->getBackgroundMusic(key);
+	std::string bgm = BMM->getBackgroundMusic(key);
 	if (bgm.compare("") == 0)
 	{
-		log("Unfine bgm %s", key.c_str());
+		CCLOG("Unfine bgm %s", key.c_str());
 		return;
 	}
 	//CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(bgm.c_str(), true);
@@ -344,7 +356,7 @@ void GameScene::autoPlay(float dt)
 
 void GameScene::createGameDate()
 {
-	auto tmpGameData = new GameData;
+	GameData *tmpGameData = new GameData;
 	tmpGameData->backgroundKey = _backgroundKey;
 	tmpGameData->bgmKey = _backgroundMusicKey;
 	tmpGameData->soundKey = _soundKey;
@@ -365,26 +377,31 @@ void GameScene::createGameDate()
 	tmpGameData->currentName = _currentName;
 	tmpGameData->currentText = _currentText;
 	tmpGameData->optionsNumber = _optionsNumber;
-	log("Test 1");
+	CCLOG("Test 1");
 	if(_optionsNumber)
 	{
-		log("Select::> optionSize[%d]", _currentOptions.size());
-		tmpGameData->options.insert(_currentOptions.begin(), _currentOptions.end());
+		CCLOG("Select::> optionSize[%d]", _currentOptions.size());
+		for (std::map<std::string, std::string>::iterator it = _currentOptions.begin(); 
+			it != _currentOptions.end(); ++it)
+		{
+				tmpGameData->options.insert(std::pair<std::string, std::string>(it->first, it->second));
+		}
+		//tmpGameData->options.insert(_currentOptions.begin(), _currentOptions.end());
 	}
-		//tmpGameData->options = *_currentOptions;
-	log("Test 2");
+	//tmpGameData->options = *_currentOptions;
+	CCLOG("Test 2");
 	GameSystem::getInstance()->setGameSceneInfo(tmpGameData);
 }
 
-void GameScene::displayCharator(std::string cName, std::string face)
+void GameScene::displayCharator(std::string& cName, std::string& face)
 {
-	auto cha = CM->getCharactor(cName);	//获取角色
+	Charactor* cha = CM->getCharactor(cName);	//获取角色
 	if (cha)
 	{
 		bool isNeedShow = false;	//判断是否需要重新显示人物立绘
 		if (cha->faceSprite)
 		{
-			log("CurrentFace = %s, Face = %s", cha->currentFace.c_str(), face.c_str());
+			CCLOG("CurrentFace = %s, Face = %s", cha->currentFace.c_str(), face.c_str());
 			if (cha->currentFace != face && face.compare("") != 0)
 			{
 				cha->leave();
@@ -400,12 +417,12 @@ void GameScene::displayCharator(std::string cName, std::string face)
 
 		if (isNeedShow)
 		{
-			auto pChar = &_chars[2];
-			PositionType tmpPT = PositionType::EMPTY;
+			Charactor** pChar = &_chars[2];
+			PositionType tmpPT = EMPTY;
 
-			Sprite *sp = NULL;
+			cocos2d::CCSprite *sp = NULL;
 			if (cha->getCharactorFace(face))
-				sp = Sprite::create(cha->getCharactorFace(face));
+				sp = cocos2d::CCSprite::create(cha->getCharactorFace(face));
 			cha->faceSprite = sp;
 			cha->key = cName;
 			cha->currentFace = face;
@@ -415,7 +432,7 @@ void GameScene::displayCharator(std::string cName, std::string face)
 				{
 					_charNumber++;
 					pChar = &_chars[2];
-					tmpPT = PositionType::CENTER;
+					tmpPT = CENTER;
 				}
 				else
 					if (_charNumber == 1)
@@ -423,16 +440,16 @@ void GameScene::displayCharator(std::string cName, std::string face)
 						if (_chars[2] == cha)
 						{
 							pChar = &_chars[2];
-							tmpPT = PositionType::CENTER;
+							tmpPT = CENTER;
 						}
 						else
 						{
-							_chars[2]->moveTo(PositionType::LEFT_CENTER);
+							_chars[2]->moveTo(LEFT_CENTER);
 							_chars[1] = _chars[2];
 							_chars[2] = _emptyChar;
 							_charNumber++;
 							pChar = &_chars[3];
-							tmpPT = PositionType::RIGHT_CENTER;
+							tmpPT = RIGHT_CENTER;
 						}
 					}
 					else
@@ -442,25 +459,25 @@ void GameScene::displayCharator(std::string cName, std::string face)
 							if (_chars[1] == cha)
 							{
 								pChar = &_chars[1];
-								tmpPT = PositionType::LEFT_CENTER;
+								tmpPT = LEFT_CENTER;
 							}
 							else
 								if (_chars[3] == cha)
 								{
 									pChar = &_chars[3];
-									tmpPT = PositionType::RIGHT_CENTER;
+									tmpPT = RIGHT_CENTER;
 								}
 								else
 								{
-									_chars[1]->moveTo(PositionType::LEFT);
+									_chars[1]->moveTo(LEFT);
 									_chars[0] = _chars[1];
 									_chars[1] = _emptyChar;
-									_chars[3]->moveTo(PositionType::RIGHT);
+									_chars[3]->moveTo(RIGHT);
 									_chars[4] = _chars[3];
 									_chars[3] = _emptyChar;
 									_charNumber++;
 									pChar = &_chars[2];
-									tmpPT = PositionType::CENTER;
+									tmpPT = CENTER;
 								}
 						}
 						else
@@ -468,24 +485,24 @@ void GameScene::displayCharator(std::string cName, std::string face)
 							if (_chars[0] == cha)
 							{
 								pChar = &_chars[0];
-								tmpPT = PositionType::LEFT;
+								tmpPT = LEFT;
 							}
 							else
 								if (_chars[2] == cha)
 								{
 									pChar = &_chars[2];
-									tmpPT = PositionType::CENTER;
+									tmpPT = CENTER;
 								}
 								else
 									if (_chars[4] == cha)
 									{
 										pChar = &_chars[4];
-										tmpPT = PositionType::RIGHT;
+										tmpPT = RIGHT;
 									}
 									else
 									{
 										pChar = &_chars[2];
-										tmpPT = PositionType::CENTER;
+										tmpPT = CENTER;
 									}
 						}
 					}
@@ -504,27 +521,27 @@ void GameScene::displayCharator(std::string cName, std::string face)
 
 				switch (tmpPT)
 				{
-				case PositionType::LEFT:
+				case LEFT:
 				{
 					sp->setPositionX(320);
 					break;
 				}
-				case PositionType::LEFT_CENTER:
+				case LEFT_CENTER:
 				{
 					sp->setPositionX(427);
 					break;
 				}
-				case PositionType::CENTER:
+				case CENTER:
 				{
 					sp->setPositionX(640);
 					break;
 				}
-				case PositionType::RIGHT_CENTER:
+				case RIGHT_CENTER:
 				{
 					sp->setPositionX(853);
 					break;
 				}
-				case PositionType::RIGHT:
+				case RIGHT:
 				{
 					sp->setPositionX(960);
 					break;
@@ -535,7 +552,7 @@ void GameScene::displayCharator(std::string cName, std::string face)
 				}
 				}
 
-				sp->setAnchorPoint(Vec2(0.5, 0));
+				sp->setAnchorPoint(ccp(0.5, 0));
 
 				_charactorsLayer->addChild(sp);
 			}
@@ -543,11 +560,12 @@ void GameScene::displayCharator(std::string cName, std::string face)
 	}
 }
 
-void GameScene::unDisplayCharator(std::string cName)
+void GameScene::unDisplayCharator(std::string &cName)
 {
-	auto cha = CM->getCharactor(cName);
+	Charactor* cha = CM->getCharactor(cName);
 	if (cha->faceSprite)
 	{
+#if 0
 		cha->faceSprite->runAction(Sequence::createWithTwoActions(FadeOut::create(1.0f), CallFunc::create([=]()
 		{
 			if (_charNumber == 1)
@@ -559,18 +577,18 @@ void GameScene::unDisplayCharator(std::string cName)
 				{
 					switch (cha->currentPosition)
 					{
-					case PositionType::LEFT_CENTER:
+					case LEFT_CENTER:
 					{
 						_chars[1] = _emptyChar;
-						_chars[3]->moveTo(PositionType::CENTER);
+						_chars[3]->moveTo(CENTER);
 						_chars[2] = _chars[3];
 						_chars[3] = _emptyChar;
 						break;
 					}
-					case PositionType::RIGHT_CENTER:
+					case RIGHT_CENTER:
 					{
 						_chars[3] = _emptyChar;
-						_chars[1]->moveTo(PositionType::CENTER);
+						_chars[1]->moveTo(CENTER);
 						_chars[2] = _chars[1];
 						_chars[1] = _emptyChar;
 						break;
@@ -586,35 +604,35 @@ void GameScene::unDisplayCharator(std::string cName)
 					{
 						switch (cha->currentPosition)
 						{
-						case PositionType::LEFT:
+						case LEFT:
 						{
 							_chars[0] = _emptyChar;
-							_chars[2]->moveTo(PositionType::LEFT_CENTER);
+							_chars[2]->moveTo(LEFT_CENTER);
 							_chars[1] = _chars[2];
 							_chars[2] = _emptyChar;
-							_chars[4]->moveTo(PositionType::RIGHT_CENTER);
+							_chars[4]->moveTo(RIGHT_CENTER);
 							_chars[3] = _chars[4];
 							_chars[4] = _emptyChar;
 							break;
 						}
-						case PositionType::CENTER:
+						case CENTER:
 						{
 							_chars[2] = _emptyChar;
-							_chars[0]->moveTo(PositionType::LEFT_CENTER);
+							_chars[0]->moveTo(LEFT_CENTER);
 							_chars[1] = _chars[0];
 							_chars[0] = _emptyChar;
-							_chars[4]->moveTo(PositionType::RIGHT_CENTER);
+							_chars[4]->moveTo(RIGHT_CENTER);
 							_chars[3] = _chars[4];
 							_chars[4] = _emptyChar;
 							break;
 						}
-						case PositionType::RIGHT:
+						case RIGHT:
 						{
 							_chars[4] = _emptyChar;
-							_chars[0]->moveTo(PositionType::LEFT_CENTER);
+							_chars[0]->moveTo(LEFT_CENTER);
 							_chars[1] = _chars[0];
 							_chars[0] = _emptyChar;
-							_chars[2]->moveTo(PositionType::RIGHT_CENTER);
+							_chars[2]->moveTo(RIGHT_CENTER);
 							_chars[3] = _chars[2];
 							_chars[2] = _emptyChar;
 							break;
@@ -633,6 +651,7 @@ void GameScene::unDisplayCharator(std::string cName)
 			)
 			)
 			);
+#endif
 	}
 	else
 		return;
@@ -642,8 +661,8 @@ void GameScene::showSaveScene(CCObject *)
 {
 	ScreenShoot();
 	createGameDate();	//向GameSystem更新GameData信息
-	Director::getInstance()->pushScene(Director::getInstance()->getRunningScene());
-	Director::getInstance()->replaceScene(SaveScene::createScene());
+	cocos2d::CCDirector::sharedDirector()->pushScene(cocos2d::CCDirector::sharedDirector()->getRunningScene());
+	cocos2d::CCDirector::sharedDirector()->replaceScene(SaveScene::createScene());
 	
 	//GameSystem::getInstance()->saveGameSceneInfo(1);
 	//this->setScale(1.0f);
@@ -654,8 +673,9 @@ void GameScene::ScreenShoot()
 	//utils::captureScreen(NULL, "savedata\\savedataImage.jpg");
 
 	float scale = 0.1164f;	//缩小倍率
-	this->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
-	auto render = RenderTexture::create(getContentSize().width*scale, getContentSize().height*scale);
+	this->setAnchorPoint(ccp(0.0f, 0.0f));
+	cocos2d::CCRenderTexture *render = cocos2d::CCRenderTexture::create(getContentSize().width*scale, 
+		getContentSize().height*scale);
 	render->begin();
 	this->setScale(scale);
 	this->visit();
@@ -686,7 +706,7 @@ void GameScene::clear()
 	//changeBackground(black);
 
 	auto backgroundSprite = Sprite::create("/bgimage/Black.jpg");
-	backgroundSprite->setAnchorPoint(Vec2(0, 0));
+	backgroundSprite->setAnchorPoint(ccp(0, 0));
 	_backgroundLayer->addChild(backgroundSprite);
 	_backgroundSprite = backgroundSprite;
 
@@ -709,8 +729,8 @@ void GameScene::clear()
 
 void GameScene::showLoadScene(CCObject *)
 {
-	Director::getInstance()->pushScene(Director::getInstance()->getRunningScene());
-	Director::getInstance()->replaceScene(LoadScene::createScene());
+	cocos2d::CCDirector::sharedDirector()->pushScene(cocos2d::CCDirector::sharedDirector()->getRunningScene());
+	cocos2d::CCDirector::sharedDirector()->replaceScene(LoadScene::createScene());
 }
 
 void GameScene::reloadScene()
@@ -718,11 +738,11 @@ void GameScene::reloadScene()
 	if (GameSystem::getInstance()->getIsLoadSuccess())
 	{ 
 		/*设置背景*/
-		auto background = BM->getBackground(GameSystem::getInstance()->getGameSceneInfo()->backgroundKey);
+		std::string background = BM->getBackground(GameSystem::getInstance()->getGameSceneInfo()->backgroundKey);
 		if (background.compare("") == 0)
 			background = "black";
-		auto backgroundSprite = Sprite::create(background);
-		backgroundSprite->setAnchorPoint(Vec2(0, 0));
+		cocos2d::CCSprite *backgroundSprite = cocos2d::CCSprite::create(background.c_str());
+		backgroundSprite->setAnchorPoint(ccp(0, 0));
 		_backgroundLayer->addChild(backgroundSprite);
 		_backgroundSprite = backgroundSprite;
 		/*设置当前名字*/
@@ -731,40 +751,40 @@ void GameScene::reloadScene()
 		showText(GameSystem::getInstance()->getGameSceneInfo()->currentText);
 		/*设置当前立绘*/
 		_charNumber = GameSystem::getInstance()->getGameSceneInfo()->charactorCount;
-		log("load charator");
+		CCLOG("load charator");
 		for (int i = 0; i < _charNumber; i++)
 		{
-			auto name = GameSystem::getInstance()->getGameSceneInfo()->fgCharactors[i].name;
-			auto face = GameSystem::getInstance()->getGameSceneInfo()->fgCharactors[i].face;
-			auto number = GameSystem::getInstance()->getGameSceneInfo()->fgCharactors[i].number;
-			auto cha = CM->getCharactor(name);	//获取角色
+			std::string name = GameSystem::getInstance()->getGameSceneInfo()->fgCharactors[i].name;
+			std::string face = GameSystem::getInstance()->getGameSceneInfo()->fgCharactors[i].face;
+			int number = GameSystem::getInstance()->getGameSceneInfo()->fgCharactors[i].number;
+			Charactor* cha = CM->getCharactor(name);	//获取角色
 			if (cha)
 			{
-				auto pChar = &_chars[number];
-				PositionType tmpPT = PositionType::EMPTY;
+				Charactor** pChar = &_chars[number];
+				PositionType tmpPT = EMPTY;
 
-				Sprite *sp = NULL;
+				cocos2d::CCSprite *sp = NULL;
 				if (cha->getCharactorFace(face))
-					sp = Sprite::create(cha->getCharactorFace(face));
+					sp = cocos2d::CCSprite::create(cha->getCharactorFace(face));
 				cha->faceSprite = sp;
 				cha->key = name;
 				cha->currentFace = face;
 				switch (number)
 				{
 				case 0:
-					tmpPT = PositionType::LEFT;
+					tmpPT = LEFT;
 					break;
 				case 1:
-					tmpPT = PositionType::LEFT_CENTER;
+					tmpPT = LEFT_CENTER;
 					break;
 				case 2:
-					tmpPT = PositionType::CENTER;
+					tmpPT = CENTER;
 					break;
 				case 3:
-					tmpPT = PositionType::RIGHT_CENTER;
+					tmpPT = RIGHT_CENTER;
 					break;
 				case 4:
-					tmpPT = PositionType::RIGHT;
+					tmpPT = RIGHT;
 					break;
 				default:
 					break;
@@ -785,27 +805,27 @@ void GameScene::reloadScene()
 
 					switch (tmpPT)
 					{
-					case PositionType::LEFT:
+					case LEFT:
 					{
 						sp->setPositionX(320);
 						break;
 					}
-					case PositionType::LEFT_CENTER:
+					case LEFT_CENTER:
 					{
 						sp->setPositionX(427);
 						break;
 					}
-					case PositionType::CENTER:
+					case CENTER:
 					{
 						sp->setPositionX(640);
 						break;
 					}
-					case PositionType::RIGHT_CENTER:
+					case RIGHT_CENTER:
 					{
 						sp->setPositionX(853);
 						break;
 					}
-					case PositionType::RIGHT:
+					case RIGHT:
 					{
 						sp->setPositionX(960);
 						break;
@@ -816,7 +836,7 @@ void GameScene::reloadScene()
 					}
 					}
 
-					sp->setAnchorPoint(Vec2(0.5, 0));
+					sp->setAnchorPoint(ccp(0.5, 0));
 
 					_charactorsLayer->addChild(sp);
 				}
@@ -826,14 +846,14 @@ void GameScene::reloadScene()
 		playBackgroundMusic(GameSystem::getInstance()->getGameSceneInfo()->bgmKey);
 		/*设置当前播放音效*/
 		/*设置选项信息*/
-		log("load select start");
+		CCLOG("load select start");
 		if (GameSystem::getInstance()->getGameSceneInfo()->optionsNumber)
 		{
 			showSelect(GameSystem::getInstance()->getGameSceneInfo()->options);
 		}
 		/*设置ScriptReader*/
-		auto sign = GameSystem::getInstance()->getGameSceneInfo()->currentSignName;
-		auto commandIndex = GameSystem::getInstance()->getGameSceneInfo()->currentCommandIndex;
+		std::string sign = GameSystem::getInstance()->getGameSceneInfo()->currentSignName;
+		int commandIndex = GameSystem::getInstance()->getGameSceneInfo()->currentCommandIndex;
 		ScriptReader::getInstance()->jumpToSign(sign, commandIndex);
 	}
 }
@@ -842,39 +862,41 @@ void GameScene::showSelect(std::map<std::string, std::string> &options)
 {
 	_currentOptions = options;
 
-	auto menu = Menu::create();
+	/*cocos2d::CCMenu* */this->_menu = cocos2d::CCMenu::create();
 	int startY = options.size()*(60) / 2;
 	int size = options.size();
-	log("Select::> optionSize[%d]", options.size());
-	for (auto itr = options.begin(); itr != options.end(); itr++)
+	CCLOG("Select::> optionSize[%d]", options.size());
+	for (std::map<std::string, std::string>::iterator itr = options.begin(); itr != options.end(); itr++)
 	{
 		_optionsNumber++;	//选择数量+1
-		auto label = Label::createWithSystemFont(itr->second, "MSYH", 30);
-		label->setColor(Color3B::WHITE);
-		label->enableShadow();
-		log("OPTION[%s] SIGN[%s]", itr->second.c_str(), itr->first.c_str());
+		cocos2d::CCLabelTTF *label = cocos2d::CCLabelTTF::create(itr->second.c_str(), "MSYH", 30);
+		label->setColor(ccWHITE);
+		label->enableShadow(CCSize(2, -2), 0, 0); //FIXME:
+		CCLOG("OPTION[%s] SIGN[%s]", itr->second.c_str(), itr->first.c_str());
 		//auto tmp = (std::string)itr->first.c_str();
-		auto tmp = itr->first;
-		auto tmp2 = itr->second;
+		/*std::string*/ this->_tmp = itr->first;
+		/*std::string*/ this->_tmp2 = itr->second;
 		//int *test;
-		auto button = MenuItemLabel::create(label, [=](Ref*)
-		{
-			HistoryLogger::getInstance()->addRecord("null", tmp2, "");
-			ScriptReader::getInstance()->jumpToSign(tmp);
-			menu->removeFromParent();
-			_currentOptions.clear();
-			_optionsNumber = 0;
-		});
+		cocos2d::CCMenuItemLabel *button = cocos2d::CCMenuItemLabel::create(label, this, menu_selector(GameScene::menuButton));
 
-		menu->addChild(button);
+		this->_menu->addChild(button);
 		button->setPosition(0, startY);
 		startY -= 60;
 	}
-	_selectLayer->addChild(menu, 13);
+	_selectLayer->addChild(this->_menu, 13);
 }
 
 void GameScene::showHistoryScene(CCObject *)
 {
-	Director::getInstance()->pushScene(Director::getInstance()->getRunningScene());
-	Director::getInstance()->replaceScene(HistoryScene::createScene());
+	cocos2d::CCDirector::sharedDirector()->pushScene(cocos2d::CCDirector::sharedDirector()->getRunningScene());
+	cocos2d::CCDirector::sharedDirector()->replaceScene(HistoryScene::createScene());
+}
+
+void GameScene::menuButton(CCObject *)
+{
+	HistoryLogger::getInstance()->addRecord("null", this->_tmp2, "");
+	ScriptReader::getInstance()->jumpToSign(this->_tmp);
+	this->_menu->removeFromParent();
+	_currentOptions.clear();
+	_optionsNumber = 0;
 }

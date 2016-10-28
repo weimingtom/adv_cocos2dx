@@ -14,7 +14,7 @@ ScriptReader::SCStopSound::~SCStopSound()
 
 void ScriptReader::SCStopSound::execute(cocos2d::CCNode* stage)
 {
-	reader->stopSound();
+	(reader->stopSoundObj->*reader->stopSound)();
 
 	reader->nextScript();
 }

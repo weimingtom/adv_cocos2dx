@@ -15,7 +15,7 @@ ScriptReader::SCPlayBGM::~SCPlayBGM()
 
 void ScriptReader::SCPlayBGM::execute(cocos2d::CCNode* stage)
 {
-	reader->playBackgroundMusic(key);
+	(reader->playBackgroundMusicObj->*reader->playBackgroundMusic)(key);
 
 	reader->nextScript();
 }

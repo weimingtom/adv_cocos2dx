@@ -14,7 +14,7 @@ ScriptReader::SCStopBGM::~SCStopBGM()
 
 void ScriptReader::SCStopBGM::execute(cocos2d::CCNode* stage)
 {
-	reader->stopBackgroundMusic();
+	(reader->stopBackgroundMusicObj->*reader->stopBackgroundMusic)();
 
 	reader->nextScript();
 }

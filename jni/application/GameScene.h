@@ -71,8 +71,8 @@ public:
 	void stopAutoPlay();	//停止自动前进
 	void autoPlay(float dt);	//自动前进
 
-	void displayCharator(std::string cName,std::string face);
-	void unDisplayCharator(std::string cName);
+	void displayCharator(std::string &cName, std::string &face);
+	void unDisplayCharator(std::string &cName);
 
 	void createGameDate();
 
@@ -87,5 +87,10 @@ public:
 
 	void showSelect(std::map<std::string, std::string> &options);	//显示选项
 
+
+	void menuButton(CCObject *);
+	cocos2d::CCMenu* _menu;
+	std::string _tmp;
+	std::string _tmp2;
 };
 
