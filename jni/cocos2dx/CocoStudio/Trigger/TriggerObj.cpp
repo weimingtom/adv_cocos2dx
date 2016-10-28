@@ -192,7 +192,8 @@ void TriggerObj::serialize(const rapidjson::Value &val)
 {
 	_id = (unsigned int)(DICTOOL->getIntValue_json(val, "id"));
     int count = DICTOOL->getArrayCount_json(val, "conditions");
-    for (int i = 0; i < count; ++i)
+    int i;
+	for (/*int*/ i = 0; i < count; ++i)
     {
         const rapidjson::Value &subDict = DICTOOL->getSubDictionary_json(val, "conditions", i);
         const char *classname = DICTOOL->getStringValue_json(subDict, "classname");
@@ -209,7 +210,7 @@ void TriggerObj::serialize(const rapidjson::Value &val)
     }
     
 	count = DICTOOL->getArrayCount_json(val, "actions");
-	for (int i = 0; i < count; ++i)
+	for (/*int*/ i = 0; i < count; ++i)
 	{
 		const rapidjson::Value &subDict = DICTOOL->getSubDictionary_json(val, "actions", i);
 		const char *classname = DICTOOL->getStringValue_json(subDict, "classname");
@@ -226,7 +227,7 @@ void TriggerObj::serialize(const rapidjson::Value &val)
 	}
 
 	int length = DICTOOL->getArrayCount_json(val, "events");
-	for (int i = 0; i < length; ++i)
+	for (/*int*/ i = 0; i < length; ++i)
 	{
 		const rapidjson::Value &sub = DICTOOL->getSubDictionary_json(val, "events", i);
 		int event = DICTOOL->getIntValue_json(sub, "id");

@@ -18,30 +18,33 @@ struct GenericStringBuffer {
 
 	GenericStringBuffer(Allocator* allocator = 0, size_t capacity = kDefaultCapacity) : stack_(allocator, capacity) {}
 
-	void Put(Ch c) { *stack_.template Push<Ch>() = c; }
+	void Put(Ch c) { *stack_.Push((Ch *)NULL) = c; }
 
 	void Clear() { stack_.Clear(); }
 
 	const char* GetString() const {
 		// Push and pop a null terminator. This is safe.
-		*stack_.template Push<Ch>() = '\0';
-		stack_.template Pop<Ch>(1);
+		*stack_.Push((Ch *)NULL) = '\0';
+		stack_.Pop((Ch *)NULL, 1);
 
-		return stack_.template Bottom<Ch>();
+		return stack_.Bottom((Ch *)NULL);
 	}
 
 	size_t Size() const { return stack_.GetSize(); }
 
-	static const size_t kDefaultCapacity = 256;
+	//static const size_t kDefaultCapacity = 256;
+	enum {kDefaultCapacity = 256};
 	mutable internal::Stack<Allocator> stack_;
 };
 
 typedef GenericStringBuffer<UTF8<> > StringBuffer;
 
+class klass {};
+
 //! Implement specialized version of PutN() with memset() for better performance.
 template<>
 inline void PutN(GenericStringBuffer<UTF8<> >& stream, char c, size_t n) {
-	memset(stream.stack_.Push<char>(n), c, n * sizeof(c));
+	memset(stream.stack_.Push((char *)NULL, n), c, n * sizeof(c));
 }
 
 } // namespace rapidjson

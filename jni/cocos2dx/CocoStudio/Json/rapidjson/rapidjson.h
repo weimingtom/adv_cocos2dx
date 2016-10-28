@@ -131,13 +131,12 @@ concept Allocator {
 */
 class CrtAllocator {
 public:
-	static const bool kNeedFree;// = true;
+	//static const bool kNeedFree = true;
+	enum {kNeedFree = 1};
 	void* Malloc(size_t size) { return malloc(size); }
 	void* Realloc(void* originalPtr, size_t originalSize, size_t newSize) { (void)originalSize; return realloc(originalPtr, newSize); }
 	static void Free(void *ptr) { free(ptr); }
 };
-
-const bool CrtAllocator::kNeedFree = true;
 
 ///////////////////////////////////////////////////////////////////////////////
 // MemoryPoolAllocator
@@ -161,7 +160,8 @@ const bool CrtAllocator::kNeedFree = true;
 template <typename BaseAllocator = CrtAllocator>
 class MemoryPoolAllocator {
 public:
-	static const bool kNeedFree;// = false;	//!< Tell users that no need to call Free() with this allocator. (concept Allocator)
+	//static const bool kNeedFree = false;	//!< Tell users that no need to call Free() with this allocator. (concept Allocator)
+	enum {kNeedFree = 0};
 
 	//! Constructor with chunkSize.
 	/*! \param chunkSize The size of memory chunk. The default is kDefaultChunkSize.
@@ -290,7 +290,7 @@ private:
 
 	//static const int kDefaultChunkCapacity = 64 * 1024; //!< Default chunk capacity.
 	enum {
-		kDefaultChunkCapacity = 64 * 1024;
+		kDefaultChunkCapacity = 64 * 1024
 	};
 
 	//! Chunk header for perpending to each chunk.
@@ -308,9 +308,6 @@ private:
 	BaseAllocator* baseAllocator_;	//!< base allocator for allocating memory chunks.
 	BaseAllocator* ownBaseAllocator_;	//!< base allocator created by this object.
 };
-
-template <typename BaseAllocator>
-const bool MemoryPoolAllocator<BaseAllocator>::kNeedFree = false;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Encoding

@@ -29,7 +29,7 @@ public:
 	void Clear() { /*stack_top_ = 0;*/ stack_top_ = stack_; }
 
 	template<typename T>
-	T* Push(size_t count = 1) {
+	T* Push(T*, size_t count = 1) {
 		 // Expand the stack if needed
 		if (stack_top_ + sizeof(T) * count >= stack_end_) {
 			size_t new_capacity = stack_capacity_ * 2;
@@ -48,20 +48,20 @@ public:
 	}
 
 	template<typename T>
-	T* Pop(size_t count) {
+	T* Pop(T*, size_t count) {
 		RAPIDJSON_ASSERT(GetSize() >= count * sizeof(T));
 		stack_top_ -= count * sizeof(T);
 		return (T*)stack_top_;
 	}
 
 	template<typename T>
-	T* Top() { 
+	T* Top(T*) { 
 		RAPIDJSON_ASSERT(GetSize() >= sizeof(T));
 		return (T*)(stack_top_ - sizeof(T));
 	}
 
 	template<typename T>
-	T* Bottom() { return (T*)stack_; }
+	T* Bottom(T*) { return (T*)stack_; }
 
 	Allocator& GetAllocator() { return *allocator_; }
 	size_t GetSize() const { return stack_top_ - stack_; }

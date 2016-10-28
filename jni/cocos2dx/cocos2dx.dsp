@@ -1613,6 +1613,70 @@ SOURCE=.\CocoStudio\GUI\UIWidgets\UITextField.h
 # Begin Group "Json"
 
 # PROP Default_Filter ""
+# Begin Group "rapidjson"
+
+# PROP Default_Filter ""
+# Begin Group "rapidjson_internal"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\CocoStudio\Json\rapidjson\internal\pow10.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Json\rapidjson\internal\stack.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Json\rapidjson\internal\strfunc.h
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=.\CocoStudio\Json\rapidjson\document.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Json\rapidjson\filestream.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Json\rapidjson\prettywriter.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Json\rapidjson\rapidjson.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Json\rapidjson\reader.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Json\rapidjson\stringbuffer.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Json\rapidjson\writer.h
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=.\CocoStudio\Json\CocoLoader.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Json\CocoLoader.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Json\DictionaryHelper.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CocoStudio\Json\DictionaryHelper.h
+# End Source File
 # End Group
 # Begin Group "Reader"
 

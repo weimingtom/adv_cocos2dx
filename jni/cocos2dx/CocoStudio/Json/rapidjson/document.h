@@ -12,6 +12,9 @@
 
 namespace rapidjson {
 
+template <typename Encoding, typename Allocator = MemoryPoolAllocator<> > 
+struct MemberType;
+
 ///////////////////////////////////////////////////////////////////////////////
 // GenericValue
 
@@ -30,10 +33,14 @@ template <typename Encoding, typename Allocator = MemoryPoolAllocator<> >
 class GenericValue {
 public:
 	//! Name-value pair in an object.
+#if 0
 	struct Member { 
 		GenericValue<Encoding, Allocator> name;		//!< name of member (must be a string)
 		GenericValue<Encoding, Allocator> value;	//!< value of member.
 	};
+#endif 	
+	typedef MemberType<Encoding, Allocator> Member;
+
 
 	typedef Encoding EncodingType;					//!< Encoding type from template parameter.
 	typedef Allocator AllocatorType;				//!< Allocator type from template parameter.
@@ -143,15 +150,17 @@ public:
 	*/
 	~GenericValue() {
 		if (Allocator::kNeedFree) {	// Shortcut by Allocator's trait
+			GenericValue* v;
+			Member* m;
 			switch(flags_) {
 			case kArrayFlag:
-				for (GenericValue* v = data_.a.elements; v != data_.a.elements + data_.a.size; ++v)
+				for (/*GenericValue* */v = data_.a.elements; v != data_.a.elements + data_.a.size; ++v)
 					v->~GenericValue();
 				Allocator::Free(data_.a.elements);
 				break;
 
 			case kObjectFlag:
-				for (Member* m = data_.o.members; m != data_.o.members + data_.o.size; ++m) {
+				for (/*Member* */m = data_.o.members; m != data_.o.members + data_.o.size; ++m) {
 					m->name.~GenericValue();
 					m->value.~GenericValue();
 				}
@@ -436,7 +445,12 @@ int z = a[0u].GetInt();				// This works too.
 		if ((flags_ & kIntFlag) != 0)					return data_.n.i.i;	// int -> double
 		if ((flags_ & kUintFlag) != 0)					return data_.n.u.u;	// unsigned -> double
 		if ((flags_ & kInt64Flag) != 0)					return (double)data_.n.i64; // int64_t -> double (may lose precision)
-		RAPIDJSON_ASSERT((flags_ & kUint64Flag) != 0);	return (double)data_.n.u64;	// uint64_t -> double (may lose precision)
+		RAPIDJSON_ASSERT((flags_ & kUint64Flag) != 0);	
+#if defined(_MSC_VER) && _MSC_VER <= 1200
+		return (double)(int)data_.n.u64;	// uint64_t -> double (may lose precision)
+#else
+		return (double)data_.n.u64;	// uint64_t -> double (may lose precision)
+#endif
 	}
 
 	GenericValue& SetInt(int i)				{ this->~GenericValue(); new (this) GenericValue(i);	return *this; }
@@ -498,6 +512,8 @@ int z = a[0u].GetInt();				// This works too.
 	*/
 	template <typename Handler>
 	const GenericValue& Accept(Handler& handler) const {
+		Member* m;
+		GenericValue* v;
 		switch(GetType()) {
 		case kNullType:		handler.Null(); break;
 		case kFalseType:	handler.Bool(false); break;
@@ -505,7 +521,7 @@ int z = a[0u].GetInt();				// This works too.
 
 		case kObjectType:
 			handler.StartObject();
-			for (Member* m = data_.o.members; m != data_.o.members + data_.o.size; ++m) {
+			for (/*Member* */m = data_.o.members; m != data_.o.members + data_.o.size; ++m) {
 				handler.String(m->name.data_.s.str, m->name.data_.s.length, false);
 				m->value.Accept(handler);
 			}
@@ -514,7 +530,7 @@ int z = a[0u].GetInt();				// This works too.
 
 		case kArrayType:
 			handler.StartArray();
-			for (GenericValue* v = data_.a.elements; v != data_.a.elements + data_.a.size; ++v)
+			for (/*GenericValue* */v = data_.a.elements; v != data_.a.elements + data_.a.size; ++v)
 				v->Accept(handler);
 			handler.EndArray(data_.a.size);
 			break;
@@ -535,8 +551,10 @@ int z = a[0u].GetInt();				// This works too.
 	}
 
 private:
-	template <typename t1, typename t2>
-	/*friend */class GenericDocument;
+	//http://blog.csdn.net/an_zhenwei/article/details/8024432
+	//template <typename Encoding, typename Allocator> class GenericDocument;
+	//typedef GenericDocument<Encoding, Allocator> GenericDocumentKlass;
+	//friend GenericDocumentKlass<Encoding, Allocator>;
 
 	enum {
 		kBoolFlag = 0x100,
@@ -683,6 +701,15 @@ private:
 };
 #pragma pack (pop)
 
+
+//! Name-value pair in an object.
+template <typename Encoding, typename Allocator = MemoryPoolAllocator<> > 
+struct MemberType { 
+	GenericValue<Encoding, Allocator> name;		//!< name of member (must be a string)
+	GenericValue<Encoding, Allocator> value;	//!< value of member.
+};
+
+
 //! Value with UTF8 encoding.
 typedef GenericValue<UTF8<> > Value;
 
@@ -698,7 +725,10 @@ typedef GenericValue<UTF8<> > Value;
 template <typename Encoding, typename Allocator = MemoryPoolAllocator<> >
 class GenericDocument : public GenericValue<Encoding, Allocator> {
 private:
-	internal::Stack<Allocator> stack_;
+	typedef rapidjson::internal::Stack<Allocator> STACK_A;
+	STACK_A stack_;
+	const char* parseError_;
+	size_t errorOffset_;
 public:
 	typedef typename Encoding::Ch Ch;						//!< Character type derived from Encoding.
 	typedef GenericValue<Encoding, Allocator> ValueType;	//!< Value type of the document.
@@ -708,7 +738,10 @@ public:
 	/*! \param allocator		Optional allocator for allocating stack memory.
 		\param stackCapacity	Initial capacity of stack in bytes.
 	*/
-	GenericDocument(Allocator* allocator = 0, size_t stackCapacity = kDefaultStackCapacity) : stack_(allocator, stackCapacity), parseError_(0), errorOffset_(0) {}
+	GenericDocument<Encoding, Allocator>(Allocator* allocator = 0, size_t stackCapacity = kDefaultStackCapacity) 
+	: stack_(allocator, stackCapacity)
+	, parseError_(0)
+	, errorOffset_(0){}
 
 	//! Parse JSON text from an input stream.
 	/*! \tparam parseFlags Combination of ParseFlag.
@@ -814,10 +847,11 @@ private:
 			stack_.Clear();
 	}
 
-	static const size_t kDefaultStackCapacity = 1024;
+	//static const size_t kDefaultStackCapacity = 1024;
+	enum {kDefaultStackCapacity = 1024};
 	//internal::Stack<Allocator> stack_;
-	const char* parseError_;
-	size_t errorOffset_;
+	//const char* parseError_;
+	//size_t errorOffset_;
 };
 
 typedef GenericDocument<UTF8<> > Document;

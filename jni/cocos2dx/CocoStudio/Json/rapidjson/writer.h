@@ -55,7 +55,7 @@ public:
 
 	Writer& StartObject() {
 		Prefix(kObjectType);
-		new (level_stack_.template Push<Level>()) Level(false);
+		new (level_stack_.Push((Level *)NULL)) Level(false);
 		WriteStartObject();
 		return *this;
 	}
@@ -63,15 +63,15 @@ public:
 	Writer& EndObject(SizeType memberCount = 0) {
 		(void)memberCount;
 		RAPIDJSON_ASSERT(level_stack_.GetSize() >= sizeof(Level));
-		RAPIDJSON_ASSERT(!level_stack_.template Top<Level>()->inArray);
-		level_stack_.template Pop<Level>(1);
+		RAPIDJSON_ASSERT(!level_stack_.Top((Level *)NULL)->inArray);
+		level_stack_.Pop((Level *)NULL, 1);
 		WriteEndObject();
 		return *this;
 	}
 
 	Writer& StartArray() {
 		Prefix(kArrayType);
-		new (level_stack_.template Push<Level>()) Level(true);
+		new (level_stack_.Push((Level *)NULL)) Level(true);
 		WriteStartArray();
 		return *this;
 	}
@@ -79,8 +79,8 @@ public:
 	Writer& EndArray(SizeType elementCount = 0) {
 		(void)elementCount;
 		RAPIDJSON_ASSERT(level_stack_.GetSize() >= sizeof(Level));
-		RAPIDJSON_ASSERT(level_stack_.template Top<Level>()->inArray);
-		level_stack_.template Pop<Level>(1);
+		RAPIDJSON_ASSERT(level_stack_.Top((Level *)NULL)->inArray);
+		level_stack_.Pop((Level *)NULL, 1);
 		WriteEndArray();
 		return *this;
 	}
@@ -97,7 +97,8 @@ protected:
 		size_t valueCount;	//!< number of values in this level
 	};
 
-	static const size_t kDefaultLevelDepth = 32;
+	//static const size_t kDefaultLevelDepth = 32;
+	enum {kDefaultLevelDepth = 32};
 
 	void WriteNull()  {
 		stream_.Put('n'); stream_.Put('u'); stream_.Put('l'); stream_.Put('l');
@@ -160,7 +161,11 @@ protected:
 	void WriteDouble(double d) {
 		char buffer[100];
 #if _MSC_VER
+#if _MSC_VER > 1200
 		int ret = sprintf_s(buffer, sizeof(buffer), "%g", d);
+#else
+		int ret = sprintf(buffer, "%g", d);
+#endif
 #else
 		int ret = snprintf(buffer, sizeof(buffer), "%g", d);
 #endif
@@ -209,7 +214,7 @@ protected:
 	void Prefix(Type type) {
 		(void)type;
 		if (level_stack_.GetSize() != 0) { // this value is not at root
-			Level* level = level_stack_.template Top<Level>();
+			Level* level = level_stack_.Top((Level *)NULL);
 			if (level->valueCount > 0) {
 				if (level->inArray) 
 					stream_.Put(','); // add comma if it is not the first element in array
