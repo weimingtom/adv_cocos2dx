@@ -15,22 +15,22 @@
 
 
 
-GameSystem* GameSystem::_instance = nullptr;
+GameSystem* GameSystem::_instance = NULL;
 
 GameSystem::GameSystem()
 {
-	if (!cocos2d::UserDefault::getInstance()->getBoolForKey(ISINIT))	//判断是否初始化过
+	if (!cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey(ISINIT))	//判断是否初始化过
 	{
 		setDefault();
 	}
 	_isLoadSuccess = false;
 	_savedata = new std::map<std::string, int>[100];
-	_gameSceneInfo = nullptr;
+	_gameSceneInfo = NULL;
 	//初始化存档列表
 	_savedataList = new GameSaveData[MAX_SAVEDATA_NUMBER];
 	createSavedata();
 	initGameSavedataList();
-	_gameScene = nullptr;
+	_gameScene = NULL;
 }
 
 
@@ -40,20 +40,20 @@ GameSystem::~GameSystem()
 	if (_gameSceneInfo)
 	{
 		delete _gameSceneInfo;
-		_gameSceneInfo = nullptr;
+		_gameSceneInfo = NULL;
 	}
 	delete _savedataList;
 	if (_screenShoot) _screenShoot->release();
 	if (_gameScene)
 	{
 		//delete _gameScene;
-		_gameScene = nullptr;
+		_gameScene = NULL;
 	}
 }
 
 GameSystem* GameSystem::getInstance()
 {
-	if (_instance == nullptr)
+	if (_instance == NULL)
 	{
 		_instance = new GameSystem();
 	}
@@ -65,7 +65,7 @@ void GameSystem::destoryInstance()
 	if (_instance)
 	{
 		delete _instance;
-		_instance = nullptr;
+		_instance = NULL;
 	}
 }
 void GameSystem::setDefault()
@@ -75,64 +75,64 @@ void GameSystem::setDefault()
 	setSoundVolume(DEFAULT_SOUNDVOLUME);
 	setTextSpeed(DEFAULT_TEXTSPEED);
 	setAutoSpeed(DEFAULT_AUTOSPEED);
-	cocos2d::UserDefault::getInstance()->setBoolForKey(ISINIT, true);
+	cocos2d::CCUserDefault::sharedUserDefault()->setBoolForKey(ISINIT, true);
 }
 
 void GameSystem::setSystemVolume(float value)
 {
-	cocos2d::UserDefault::getInstance()->setFloatForKey(SYSTEMVOLUME, value);
+	cocos2d::CCUserDefault::sharedUserDefault()->setFloatForKey(SYSTEMVOLUME, value);
 }
 
 void GameSystem::setMusicVolume(float value)
 {
-	cocos2d::UserDefault::getInstance()->setFloatForKey(MUSICVOLUME, value);
+	cocos2d::CCUserDefault::sharedUserDefault()->setFloatForKey(MUSICVOLUME, value);
 }
 
 void GameSystem::setSoundVolume(float value)
 {
-	cocos2d::UserDefault::getInstance()->setFloatForKey(SOUNDVOLUME, value);
+	cocos2d::CCUserDefault::sharedUserDefault()->setFloatForKey(SOUNDVOLUME, value);
 }
 
 void GameSystem::setTextSpeed(float value)
 {
-	cocos2d::UserDefault::getInstance()->setFloatForKey(TEXTSPEED, value);
+	cocos2d::CCUserDefault::sharedUserDefault()->setFloatForKey(TEXTSPEED, value);
 }
 
 void GameSystem::setAutoSpeed(float value)
 {
-	cocos2d::UserDefault::getInstance()->setFloatForKey(AUTOSPEED, value);
+	cocos2d::CCUserDefault::sharedUserDefault()->setFloatForKey(AUTOSPEED, value);
 }
 
 
 
 float GameSystem::getSystemVolume()
 {
-	return cocos2d::UserDefault::getInstance()->getFloatForKey(SYSTEMVOLUME);
+	return cocos2d::CCUserDefault::sharedUserDefault()->getFloatForKey(SYSTEMVOLUME);
 }
 
 float GameSystem::getMusicVolume()
 {
-	return cocos2d::UserDefault::getInstance()->getFloatForKey(MUSICVOLUME);
+	return cocos2d::CCUserDefault::sharedUserDefault()->getFloatForKey(MUSICVOLUME);
 }
 
 float GameSystem::getSoundVolume()
 {
-	return cocos2d::UserDefault::getInstance()->getFloatForKey(SOUNDVOLUME);
+	return cocos2d::CCUserDefault::sharedUserDefault()->getFloatForKey(SOUNDVOLUME);
 }
 
 float GameSystem::getTextSpeed()
 {
-	return cocos2d::UserDefault::getInstance()->getFloatForKey(TEXTSPEED);
+	return cocos2d::CCUserDefault::sharedUserDefault()->getFloatForKey(TEXTSPEED);
 }
 
 float GameSystem::getAutoSpeed()
 {
-	return cocos2d::UserDefault::getInstance()->getFloatForKey(AUTOSPEED);
+	return cocos2d::CCUserDefault::sharedUserDefault()->getFloatForKey(AUTOSPEED);
 }
 
 void GameSystem::setDataValue(std::string &key, int value)
 {
-	auto result = _savedata[0].find(key);
+	std::map<std::string, int>::iterator result = _savedata[0].find(key);
 	if (result != _savedata[0].end())
 	{
 		result->second = value;
@@ -145,10 +145,10 @@ void GameSystem::setDataValue(std::string &key, int value)
 
 int GameSystem::getDataValue(std::string &key)
 {
-	auto result = _savedata[0].find(key);
+	std::map<std::string, int>::iterator result = _savedata[0].find(key);
 	if (result != _savedata[0].end())
 	{
-		// cocos2d::log("GS> key = %s , value = %d", key.c_str(), result->second);
+		// CCLOG("GS> key = %s , value = %d", key.c_str(), result->second);
 		return result->second;
 	}
 	else
@@ -157,9 +157,9 @@ int GameSystem::getDataValue(std::string &key)
 	}
 }
 
-void GameSystem::setData(std::map<std::string, int> *map)// = nullptr)
+void GameSystem::setData(std::map<std::string, int> *map)// = NULL)
 {
-	if (map == nullptr)
+	if (map == NULL)
 	{
 		if (!(_savedata[0].empty())) _savedata[0].clear();
 	}
@@ -173,14 +173,14 @@ void GameSystem::setSavedata(int i, bool value)
 {
 	char* ch = new char[4];
 	itoa(i, ch, 10);
-	cocos2d::UserDefault::getInstance()->setBoolForKey(ch, value);
+	cocos2d::CCUserDefault::sharedUserDefault()->setBoolForKey(ch, value);
 }
 
 bool GameSystem::getSavedata(int i)
 {
 	char* ch = new char[4];
 	itoa(i, ch, 10);
-	return cocos2d::UserDefault::getInstance()->getBoolForKey(ch);
+	return cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey(ch);
 }
 
 GameData* GameSystem::getGameSceneInfo()
@@ -193,7 +193,7 @@ void GameSystem::setGameSceneInfo(GameData* gameData)
 	if (_gameSceneInfo)
 	{
 		delete _gameSceneInfo;
-		_gameSceneInfo = nullptr;
+		_gameSceneInfo = NULL;
 	}
 	_gameSceneInfo = gameData;
 }
@@ -216,21 +216,25 @@ void GameSystem::saveGameSceneInfo(int i)
 	char ch[3];
 	sprintf(ch, "%d", i+1);
 	char file[100];
-	sprintf(file, "%s%s%s%s", FileUtils::getInstance()->getWritablePath().c_str(), path, ch, ".sav");
+	sprintf(file, "%s%s%s%s", cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath().c_str(), path, ch, ".sav");
 	char image[100];
 	sprintf(image, "%s%d.jpg", path, i+1);
-	cocos2d::log("Savedata file path = %s",file);
-	cocos2d::log("Savedata image path = %s", image);
+	CCLOG("Savedata file path = %s",file);
+	CCLOG("Savedata image path = %s", image);
 	FILE* savedata = fopen(file,"wb");
 	if (savedata)
 	{
 		/*保存存档信息*/
 		/*--储存截图路径*/
+#if 0
 		bool result = _screenShoot->saveToFile(image, false, [&](RenderTexture *r, const  std::string &s){ });
+#else
+		bool result = _screenShoot->saveToFile(image);
+#endif
 		if (result)
 		{
 			char tmp[100];
-			sprintf(tmp, "%s%s", FileUtils::getInstance()->getWritablePath().c_str(), image);
+			sprintf(tmp, "%s%s", cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath().c_str(), image);
 			fwrite(tmp, sizeof(char), strlen(tmp), savedata);
 		}
 		fputs("\r\n", savedata);
@@ -283,7 +287,7 @@ void GameSystem::saveGameSceneInfo(int i)
 		fputs("\r\n", savedata);
 		if (_gameSceneInfo->optionsNumber)
 		{
-			for (auto itr = _gameSceneInfo->options.begin(); itr != _gameSceneInfo->options.end(); itr++)
+			for (std::map<std::string, std::string>::iterator itr = _gameSceneInfo->options.begin(); itr != _gameSceneInfo->options.end(); itr++)
 			{
 				fwrite(itr->first.c_str(), sizeof(char), strlen(itr->first.c_str()), savedata);
 				fputs("\r\n", savedata);
@@ -292,7 +296,7 @@ void GameSystem::saveGameSceneInfo(int i)
 			}
 		}
 		/*保存当前ScriptReader标签*/
-		auto sign = ScriptReader::getInstance()->getCurrentSignName();
+		std::string sign = ScriptReader::getInstance()->getCurrentSignName();
 		fwrite(sign.c_str(), sizeof(char), strlen(sign.c_str()), savedata);
 		fputs("\r\n", savedata);
 		/*保存当前的CommandIndex*/
@@ -308,7 +312,7 @@ void GameSystem::saveGameSceneInfo(int i)
 	}
 	else
 	{
-		cocos2d::log("savedata file error.");
+		CCLOG("savedata file error.");
 	}
 	savedata = NULL;
  }
@@ -316,11 +320,11 @@ void GameSystem::saveGameSceneInfo(int i)
 void GameSystem::initGameSavedataList()
 {
 	//记录cocos2d-x中CCFileUtils，对于没有找到文件是否弹出提示框的设置
-	bool isNeedModifyPopupSetting = FileUtils::sharedFileUtils()->isPopupNotify();
+	bool isNeedModifyPopupSetting = cocos2d::CCFileUtils::sharedFileUtils()->isPopupNotify();
 	//如果有提示，就暂时关闭，因为这里的读取可能找不到该文件，因为该文件有可能还没有创建
 	if (isNeedModifyPopupSetting)
 	{
-		FileUtils::sharedFileUtils()->setPopupNotify(false);
+		cocos2d::CCFileUtils::sharedFileUtils()->setPopupNotify(false);
 	}
 
 	for (int i = 0; i < MAX_SAVEDATA_NUMBER; i++)
@@ -331,14 +335,14 @@ void GameSystem::initGameSavedataList()
 	//如果以前设置找不到文件有提示，则改回原来的设置
 	if (isNeedModifyPopupSetting)
 	{
-		FileUtils::sharedFileUtils()->setPopupNotify(true);
+		cocos2d::CCFileUtils::sharedFileUtils()->setPopupNotify(true);
 	}
 }
 
 GameSaveData* GameSystem::getGameSavedata(int i)
 {
 	if (_savedataList[i].date.compare("") == 0)
-		return nullptr;
+		return NULL;
 	else
 		return &_savedataList[i];
 }
@@ -346,10 +350,10 @@ GameSaveData* GameSystem::getGameSavedata(int i)
 void GameSystem::createSavedata()
 {
 	//绑定用户储存目录下
-	std::string path = FileUtils::getInstance()->getWritablePath();
+	std::string path = cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath();
 	//创建savedata文件夹
 	path += "savedata";
-	//log("path=%s", pathToSave.c_str());
+	//CCLOG("path=%s", pathToSave.c_str());
 
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32)
 	DIR *pDir = NULL;
@@ -361,20 +365,25 @@ void GameSystem::createSavedata()
 		mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
 	}
 #else
+
+#ifndef INVALID_FILE_ATTRIBUTES
+#define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
+#endif	// INVALID_FILE_ATTRIBUTES
+
 	if ((GetFileAttributesA(path.c_str())) == INVALID_FILE_ATTRIBUTES)
 	{
 		CreateDirectoryA(path.c_str(), 0);
 	}
 #endif
-	log("savadata created.");
+	CCLOG("savadata created.");
 }
 
-void GameSystem::setScreenShoot(RenderTexture* render)
+void GameSystem::setScreenShoot(cocos2d::CCRenderTexture* render)
 {
 	_screenShoot = render;
 }
 
-RenderTexture* GameSystem::getScreenShoot()
+cocos2d::CCRenderTexture* GameSystem::getScreenShoot()
 {
 	return _screenShoot;
 }
@@ -385,9 +394,10 @@ void GameSystem::updateGameSavedata(int i)
 	char ch[4];
 	sprintf(ch, "%d", i+1);
 	char file[100];
-	sprintf(file, "%s%s%s%s", FileUtils::getInstance()->getWritablePath().c_str(), path, ch, ".sav");
+	sprintf(file, "%s%s%s%s", cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath().c_str(), path, ch, ".sav");
 
-	std::string data = FileUtils::getInstance()->getStringFromFile(file);
+	//std::string data = cocos2d::CCFileUtils::sharedFileUtils()->getStringFromFile(file);
+	std::string data = CCString::createWithContentsOfFile(CCFileUtils::sharedFileUtils()->fullPathForFilename(file).c_str())->getCString();
 	if (data.compare("") != 0)
 	{
 		int sPos = 0;	//行头
@@ -396,20 +406,20 @@ void GameSystem::updateGameSavedata(int i)
 		/*读取存档截图路径*/
 		ePos = data.find('\n', sPos);
 		temp = data.substr(sPos, ePos - sPos - 1);
-		Director::getInstance()->getTextureCache()->reloadTexture(temp);
-		//cocos2d::log(temp.c_str());
+		cocos2d::CCTextureCache::sharedTextureCache()->reloadTexture(temp.c_str());
+		//CCLOG(temp.c_str());
 		_savedataList[i].imageFile = temp;
 		sPos = ePos + 1;
 		/*读取存档时间*/
 		ePos = data.find('\n', sPos);
 		temp = data.substr(sPos, ePos - sPos - 1);
-		//cocos2d::log(temp.c_str());
+		//CCLOG(temp.c_str());
 		_savedataList[i].date = temp;
 		sPos = ePos + 1;
 		/*读取存档文本*/
 		ePos = data.find('\n', sPos);
 		temp = data.substr(sPos, ePos - sPos - 1);
-		//cocos2d::log(temp.c_str());
+		//CCLOG(temp.c_str());
 		_savedataList[i].text = temp;
 		sPos = ePos + 1;
 	}
@@ -421,12 +431,13 @@ bool GameSystem::loadGameSceneInfo(int i)
 	char ch[4];
 	sprintf(ch, "%d", i + 1);
 	char file[100];
-	sprintf(file, "%s%s%s%s", FileUtils::getInstance()->getWritablePath().c_str(), path, ch, ".sav");
-	std::string data = FileUtils::getInstance()->getStringFromFile(file);
+	sprintf(file, "%s%s%s%s", cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath().c_str(), path, ch, ".sav");
+	//std::string data = cocos2d::CCFileUtils::sharedFileUtils()->getStringFromFile(file);
+	std::string data = CCString::createWithContentsOfFile(CCFileUtils::sharedFileUtils()->fullPathForFilename(file).c_str())->getCString();
 	if (_gameSceneInfo)	//删掉旧信息
 	{
 		//delete _gameSceneInfo;
-		_gameSceneInfo = nullptr;
+		_gameSceneInfo = NULL;
 	}
 	_gameSceneInfo = new GameData;
 	if (data.compare("") != 0)
@@ -466,7 +477,8 @@ bool GameSystem::loadGameSceneInfo(int i)
 		_gameSceneInfo->charactorCount = atoi(temp.c_str());
 
 		/*读取当前立绘信息*/
-		for (int j = 0; j < _gameSceneInfo->charactorCount; j++)
+		int j;
+		for (/*int*/ j = 0; j < _gameSceneInfo->charactorCount; j++)
 		{
 			/*读取角色key*/
 			ePos = data.find('\n', sPos);
@@ -496,7 +508,7 @@ bool GameSystem::loadGameSceneInfo(int i)
 		temp = data.substr(sPos, ePos - sPos - 1);
 		sPos = ePos + 1;
 		_gameSceneInfo->optionsNumber = atoi(temp.c_str());
-		for (int j = 0; j < _gameSceneInfo->optionsNumber; j++)
+		for (/*int*/ j = 0; j < _gameSceneInfo->optionsNumber; j++)
 		{
 			std::string sign;
 			std::string text;
@@ -519,22 +531,22 @@ bool GameSystem::loadGameSceneInfo(int i)
 		sPos = ePos + 1;
 		_gameSceneInfo->currentCommandIndex = atoi(temp.c_str());
 
-		log("Load done.");
+		CCLOG("Load done.");
 		return true;
 	}
 	else
 	{
-		log("%s not found", file);
+		CCLOG("%s not found", file);
 		return false;
 	}
 }
 
-void GameSystem::setGameScene(Scene* scene)
+void GameSystem::setGameScene(cocos2d::CCScene* scene)
 {
 	_gameScene = scene;
 }
 
-Scene* GameSystem::getGameScene()
+cocos2d::CCScene* GameSystem::getGameScene()
 {
 	return _gameScene;
 }

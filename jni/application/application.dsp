@@ -303,12 +303,10 @@ SOURCE=.\GameScene.h
 # Begin Source File
 
 SOURCE=.\GameSystem.cpp
-# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
 SOURCE=.\GameSystem.h
-# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
