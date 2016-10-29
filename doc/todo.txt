@@ -1,1 +1,19 @@
 ﻿jpeg文件校对
+
+
+	//std::string data = cocos2d::CCFileUtils::sharedFileUtils()->getStringFromFile(file);
+	std::string strFullPathString = CCFileUtils::sharedFileUtils()->fullPathForFilename(file);
+	const char *strFullPath = strFullPathString.c_str();
+	FILE *fp = fopen(strFullPath, "wb");
+	std::string data = "";
+	if (fp != NULL)
+	{
+		fclose(fp);
+		CCString *contents = CCString::createWithContentsOfFile(strFullPath);
+		if (!contents)
+		{
+			data = contents->getCString();
+		}
+	}
+	
+	

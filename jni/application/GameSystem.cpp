@@ -397,7 +397,19 @@ void GameSystem::updateGameSavedata(int i)
 	sprintf(file, "%s%s%s%s", cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath().c_str(), path, ch, ".sav");
 
 	//std::string data = cocos2d::CCFileUtils::sharedFileUtils()->getStringFromFile(file);
-	std::string data = CCString::createWithContentsOfFile(CCFileUtils::sharedFileUtils()->fullPathForFilename(file).c_str())->getCString();
+	std::string strFullPathString = CCFileUtils::sharedFileUtils()->fullPathForFilename(file);
+	const char *strFullPath = strFullPathString.c_str();
+	FILE *fp = fopen(strFullPath, "wb");
+	std::string data = "";
+	if (fp != NULL)
+	{
+		fclose(fp);
+		CCString *contents = CCString::createWithContentsOfFile(strFullPath);
+		if (!contents)
+		{
+			data = contents->getCString();
+		}
+	}
 	if (data.compare("") != 0)
 	{
 		int sPos = 0;	//ÐÐÍ·
