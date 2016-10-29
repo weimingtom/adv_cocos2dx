@@ -57,7 +57,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
     pEGLView->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, kResolutionNoBorder);
 #endif
 
-    
     vector<string> searchPath;
 
     // In this demo, we select resource according to the frame's height.
@@ -118,7 +117,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // create a scene. it's an autorelease object
     //CCScene *pScene = HelloWorld::scene();
 	CCScene *mainScene = MainMenu::createScene();
-
+	
     // run
     pDirector->runWithScene(mainScene);
 

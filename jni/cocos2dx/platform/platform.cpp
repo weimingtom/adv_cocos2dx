@@ -52,11 +52,163 @@ NS_CC_END
 
 /*platform\CCPlatformMacros.h*/
 #if defined(_MSC_VER) && _MSC_VER <= 1200
-void __cdecl __CCLOGWITHFUNCTION(const char *, ...){}
-void __cdecl CCLOG(const char *, ...){}
-void __cdecl CCLOGINFO(const char *, ...){}
-void __cdecl CCLOGERROR(const char *, ...){}
-void __cdecl CCLOGWARN(const char *, ...){}
-void __cdecl LUALOG(const char *, ...){}
+#include <windows.h>
+#define MAX_LEN         (cocos2d::kMaxLogLen + 1)
+
+void __cdecl __CCLOGWITHFUNCTION(const char *pszFormat, ...)
+{
+#if 0
+    char szBuf[MAX_LEN];
+
+    va_list ap;
+    va_start(ap, pszFormat);
+#if defined(__MINGW32__)
+    vsnprintf(szBuf, MAX_LEN, pszFormat, ap);
+#elif defined(_MSC_VER) && _MSC_VER <= 1200
+	_vsnprintf(szBuf, MAX_LEN, pszFormat, ap);
+#else
+    vsnprintf_s(szBuf, MAX_LEN, MAX_LEN, pszFormat, ap);
+#endif
+    va_end(ap);
+
+    WCHAR wszBuf[MAX_LEN] = {0};
+    MultiByteToWideChar(CP_UTF8, 0, szBuf, -1, wszBuf, sizeof(wszBuf));
+    OutputDebugStringW(wszBuf);
+    OutputDebugStringA("\n");
+
+    WideCharToMultiByte(CP_ACP, 0, wszBuf, sizeof(wszBuf), szBuf, sizeof(szBuf), NULL, FALSE);
+    printf("%s\n", szBuf);
+#endif
+}
+
+void __cdecl CCLOG(const char *pszFormat, ...)
+{
+#if 1
+    char szBuf[MAX_LEN];
+
+    va_list ap;
+    va_start(ap, pszFormat);
+#if defined(__MINGW32__)
+    vsnprintf(szBuf, MAX_LEN, pszFormat, ap);
+#elif defined(_MSC_VER) && _MSC_VER <= 1200
+	_vsnprintf(szBuf, MAX_LEN, pszFormat, ap);
+#else
+    vsnprintf_s(szBuf, MAX_LEN, MAX_LEN, pszFormat, ap);
+#endif
+    va_end(ap);
+
+    WCHAR wszBuf[MAX_LEN] = {0};
+    MultiByteToWideChar(CP_UTF8, 0, szBuf, -1, wszBuf, sizeof(wszBuf));
+    OutputDebugStringW(wszBuf);
+    OutputDebugStringA("\n");
+
+    WideCharToMultiByte(CP_ACP, 0, wszBuf, sizeof(wszBuf), szBuf, sizeof(szBuf), NULL, FALSE);
+    printf("%s\n", szBuf);
+#endif
+}
+
+void __cdecl CCLOGINFO(const char *pszFormat, ...)
+{
+#if 0
+    char szBuf[MAX_LEN];
+
+    va_list ap;
+    va_start(ap, pszFormat);
+#if defined(__MINGW32__)
+    vsnprintf(szBuf, MAX_LEN, pszFormat, ap);
+#elif defined(_MSC_VER) && _MSC_VER <= 1200
+	_vsnprintf(szBuf, MAX_LEN, pszFormat, ap);
+#else
+    vsnprintf_s(szBuf, MAX_LEN, MAX_LEN, pszFormat, ap);
+#endif
+    va_end(ap);
+
+    WCHAR wszBuf[MAX_LEN] = {0};
+    MultiByteToWideChar(CP_UTF8, 0, szBuf, -1, wszBuf, sizeof(wszBuf));
+    OutputDebugStringW(wszBuf);
+    OutputDebugStringA("\n");
+
+    WideCharToMultiByte(CP_ACP, 0, wszBuf, sizeof(wszBuf), szBuf, sizeof(szBuf), NULL, FALSE);
+    printf("%s\n", szBuf);
+#endif
+}
+
+void __cdecl CCLOGERROR(const char *pszFormat, ...)
+{
+#if 1
+    char szBuf[MAX_LEN];
+
+    va_list ap;
+    va_start(ap, pszFormat);
+#if defined(__MINGW32__)
+    vsnprintf(szBuf, MAX_LEN, pszFormat, ap);
+#elif defined(_MSC_VER) && _MSC_VER <= 1200
+	_vsnprintf(szBuf, MAX_LEN, pszFormat, ap);
+#else
+    vsnprintf_s(szBuf, MAX_LEN, MAX_LEN, pszFormat, ap);
+#endif
+    va_end(ap);
+
+    WCHAR wszBuf[MAX_LEN] = {0};
+    MultiByteToWideChar(CP_UTF8, 0, szBuf, -1, wszBuf, sizeof(wszBuf));
+    OutputDebugStringW(wszBuf);
+    OutputDebugStringA("\n");
+
+    WideCharToMultiByte(CP_ACP, 0, wszBuf, sizeof(wszBuf), szBuf, sizeof(szBuf), NULL, FALSE);
+    printf("%s\n", szBuf);
+#endif
+}
+
+void __cdecl CCLOGWARN(const char *pszFormat, ...)
+{
+#if 1
+    char szBuf[MAX_LEN];
+
+    va_list ap;
+    va_start(ap, pszFormat);
+#if defined(__MINGW32__)
+    vsnprintf(szBuf, MAX_LEN, pszFormat, ap);
+#elif defined(_MSC_VER) && _MSC_VER <= 1200
+	_vsnprintf(szBuf, MAX_LEN, pszFormat, ap);
+#else
+    vsnprintf_s(szBuf, MAX_LEN, MAX_LEN, pszFormat, ap);
+#endif
+    va_end(ap);
+
+    WCHAR wszBuf[MAX_LEN] = {0};
+    MultiByteToWideChar(CP_UTF8, 0, szBuf, -1, wszBuf, sizeof(wszBuf));
+    OutputDebugStringW(wszBuf);
+    OutputDebugStringA("\n");
+
+    WideCharToMultiByte(CP_ACP, 0, wszBuf, sizeof(wszBuf), szBuf, sizeof(szBuf), NULL, FALSE);
+    printf("%s\n", szBuf);
+#endif
+}
+
+void __cdecl LUALOG(const char *pszFormat, ...)
+{
+#if 0
+    char szBuf[MAX_LEN];
+
+    va_list ap;
+    va_start(ap, pszFormat);
+#if defined(__MINGW32__)
+    vsnprintf(szBuf, MAX_LEN, pszFormat, ap);
+#elif defined(_MSC_VER) && _MSC_VER <= 1200
+	_vsnprintf(szBuf, MAX_LEN, pszFormat, ap);
+#else
+    vsnprintf_s(szBuf, MAX_LEN, MAX_LEN, pszFormat, ap);
+#endif
+    va_end(ap);
+
+    WCHAR wszBuf[MAX_LEN] = {0};
+    MultiByteToWideChar(CP_UTF8, 0, szBuf, -1, wszBuf, sizeof(wszBuf));
+    OutputDebugStringW(wszBuf);
+    OutputDebugStringA("\n");
+
+    WideCharToMultiByte(CP_ACP, 0, wszBuf, sizeof(wszBuf), szBuf, sizeof(szBuf), NULL, FALSE);
+    printf("%s\n", szBuf);
+#endif
+}
 #endif
 

@@ -45,39 +45,44 @@ bool MainMenu::init()
 	cocos2d::CCSprite *backgroundEffect2 = cocos2d::CCSprite::create("/ui/backgroundEffect/fullscreen_smoke_2.png");
 	backgroundEffect1->setPosition(ccp(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	backgroundEffect2->setPosition(ccp(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+
+	int xMenu = visibleSize.width - 80;//280;
+	int hMenu = 20;
+	int yMenu = visibleSize.height / 2 - hMenu * 4;
+	
 	//logo
 	cocos2d::CCSprite *gameTitle = cocos2d::CCSprite::create("/ui/game_title.png");
-	gameTitle->setPosition(ccp(433, 358));
+	gameTitle->setPosition(ccp(150, visibleSize.height - hMenu * 3 - yMenu)); //ccp(433, 358));
 
 	//²Ëµ¥°´Å¥
 	cocos2d::CCMenuItemImage *buttonNew = cocos2d::CCMenuItemImage::create(
 		"/ui/Title/button_new.png", 
 		"/ui/Title/button_new_down.png", this, 
 		menu_selector(MainMenu::newgame));
-	buttonNew->setPosition(ccp(1114, visibleSize.height - 243));
+	buttonNew->setPosition(ccp(xMenu, visibleSize.height - hMenu * 1 - yMenu));//ccp(1114, visibleSize.height - 243));
 
 	cocos2d::CCMenuItemImage *buttonLoad = cocos2d::CCMenuItemImage::create(
 		"/ui/Title/button_load.png", 
 		"/ui/Title/button_load_down.png", this, 
 		menu_selector(MainMenu::load));
-	buttonLoad->setPosition(ccp(1114, visibleSize.height - 293));
+	buttonLoad->setPosition(ccp(xMenu, visibleSize.height - hMenu * 2 - yMenu));//ccp(1114, visibleSize.height - 293));
 
 	cocos2d::CCMenuItemImage *buttonCG = cocos2d::CCMenuItemImage::create(
 		"/ui/Title/button_cg.png", 
 		"/ui/Title/button_cg_down.png");
-	buttonCG->setPosition(ccp(1114, visibleSize.height - 343));
+	buttonCG->setPosition(ccp(xMenu, visibleSize.height - hMenu * 3 - yMenu));//ccp(1114, visibleSize.height - 343));
 
 	cocos2d::CCMenuItemImage *buttonConfig = cocos2d::CCMenuItemImage::create(
 		"/ui/Title/button_config.png", 
 		"/ui/Title/button_config_down.png", this, 
 		menu_selector(MainMenu::config));
-	buttonConfig->setPosition(ccp(1114, visibleSize.height - 393));
+	buttonConfig->setPosition(ccp(xMenu, visibleSize.height - hMenu * 4 - yMenu));//ccp(1114, visibleSize.height - 393));
 
 	cocos2d::CCMenuItemImage *buttonExit = cocos2d::CCMenuItemImage::create(
 		"/ui/Title/button_exit.png", 
 		"/ui/Title/button_exit_down.png", this,
 		menu_selector(MainMenu::menuExit));
-	buttonExit->setPosition(ccp(1114, visibleSize.height - 443)); 
+	buttonExit->setPosition(ccp(xMenu, visibleSize.height - hMenu * 5 - yMenu));//ccp(1114, visibleSize.height - 443)); 
 
 	cocos2d::CCMenu *menu = cocos2d::CCMenu::create(
 		buttonNew, buttonLoad, buttonCG, buttonConfig, buttonExit, NULL);
