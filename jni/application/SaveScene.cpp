@@ -118,7 +118,7 @@ bool SaveScene::init()
 		"/ui/button_return.png", 
 		"/ui/button_return_down.png", this,  
 		menu_selector(SaveScene::back));
-	buttonBack->setPosition(ccp(175, 90));
+	buttonBack->setPosition(ccp(60/*175*/, 50/*90*/));
 	cocos2d::CCMenu *menu = cocos2d::CCMenu::create(buttonBack, NULL);
 	menu->setPosition(ccp(0, 0));
 	stageLayer->addChild(menu);

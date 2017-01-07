@@ -55,7 +55,7 @@ bool SettingScene::init()
 
 	//SliderBar
 	_musicVolumeSlidebar = Slidebar::createSlidebar("/ui/scroll_bar.png", "/ui/scroll_point.png");
-	_musicVolumeSlidebar->setPosition(ccp(750, 400));
+	_musicVolumeSlidebar->setPosition(ccp(280/*750*/, 177/*400*/));
 	_musicVolumeSlidebar->setFloat(GameSystem::getInstance()->getMusicVolume());
 	_musicVolumeSlidebar->moveEvent = (void (CCObject::*)()) &SettingScene::changeMusicVolume; 
 	_musicVolumeSlidebar->moveEventObj = this;
@@ -68,10 +68,10 @@ bool SettingScene::init()
 	//²âÊÔ°´Å¥
 	EasyButton *testButton = EasyButton::createEasyButton(
 		"/ui/charbox_off.png", "/ui/charbox_off.png", "/ui/charbox_on.png");
-	testButton->setPosition(ccp(710, 275));
+	testButton->setPosition(ccp(280/*710*/, 120/*275*/));
 	EasyButton *testButton2 = EasyButton::createEasyButton(
 		"/ui/charbox_off.png", "/ui/charbox_off.png", "/ui/charbox_on.png");
-	testButton2->setPosition(ccp(920, 275));
+	testButton2->setPosition(ccp(370/*920*/, 120/*275*/));
 
 	_testRadio = RadioButton::createRadioButton(testButton, testButton2, NULL);
 	_testRadio->setSelectedNumber(1);
@@ -86,7 +86,7 @@ bool SettingScene::init()
 		"/ui/button_return.png", 
 		"/ui/button_return_down.png", this, 
 		menu_selector(SettingScene::back));
-	buttonBack->setPosition(ccp(175, 90));
+	buttonBack->setPosition(ccp(60/*175*/, 50/*90*/));
 	cocos2d::CCMenu *menu = cocos2d::CCMenu::create(buttonBack, NULL);
 	menu->setPosition(ccp(0, 0));
 	stageLayer->addChild(menu);

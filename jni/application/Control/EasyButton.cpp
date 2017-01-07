@@ -19,44 +19,63 @@ EasyButton::EasyButton(cocos2d::CCSprite* _normalSprite, cocos2d::CCSprite* _tou
 		this->addChild(_selected);
 		_selected->setVisible(false);
 	}
-#if 0
-	_eventTouch = EventListenerTouchOneByOne::create();
-	_eventTouch->onTouchBegan = [=](Touch *t, Event *e)
-	{
-		//log("EasyButton Touch!");
-		if (_normal->getBoundingBox().containsPoint(this->convertTouchToNodeSpace(t)))	//如果碰到指针
-		{
-			onTouchBegan(t, e);
-			return true;
-		}
-		return false;
-	};
-	_eventTouch->onTouchMoved = [=](Touch *t, Event *e)
-	{
-		//onTouchMoved(t, e);
-	};
-	_eventTouch->onTouchEnded = [=](Touch *t, Event *e)
-	{
-		//log("EasyButton Touch End!");
-		if (_normal->getBoundingBox().containsPoint(this->convertTouchToNodeSpace(t)))	//如果碰到指针
-		{
-			onTouchEnded(t, e, true);
-		}
-		else
-		{
-			onTouchEnded(t, e, false);
-		}
-	};
-	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_eventTouch, this);
-	touchEvent = [=](){};
-	//touchEventWithInt = [=](){};
-#endif
+	touchEventObj = NULL;
+	touchEvent = NULL;
 }
 
 
 EasyButton::~EasyButton()
 {
 }
+
+void EasyButton::onEnter()  
+{  
+	//addEventListenerWithSceneGraphPriority
+	//_eventTouch->setSwallowTouches(true);
+    CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 0, false);  
+    CCNode::onEnter();  
+}
+
+void EasyButton::onExit()  
+{  
+    CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this);  
+    CCNode::onExit();  
+}  
+
+bool EasyButton::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
+{
+	//log("EasyButton Touch!");
+	if (_normal->boundingBox().containsPoint(this->convertTouchToNodeSpace(pTouch)))	//如果碰到指针
+	{
+		onTouchBegan(pTouch, pEvent);
+		return true;
+	}
+	return false;
+}
+
+void EasyButton::ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent)
+{
+	//onTouchMoved(pTouch, pEvent);
+}
+
+void EasyButton::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent)
+{
+	//log("EasyButton Touch End!");
+	if (_normal->boundingBox().containsPoint(this->convertTouchToNodeSpace(pTouch)))	//如果碰到指针
+	{
+		onTouchEnded(pTouch, pEvent, true);
+	}
+	else
+	{
+		onTouchEnded(pTouch, pEvent, false);
+	}
+}
+
+void EasyButton::ccTouchCancelled(CCTouch *pTouch, CCEvent *pEvent)
+{
+
+}
+
 
 EasyButton* EasyButton::createEasyButton(const std::string &_normalFile)
 {
@@ -72,7 +91,7 @@ EasyButton* EasyButton::createEasyButton(const std::string &_normalFile)
     delete ret;
     ret = NULL;
     return NULL;
-};
+}
 
 EasyButton* EasyButton::createEasyButton(const std::string &_normalFile, const std::string &_touchFile)
 {
@@ -80,7 +99,7 @@ EasyButton* EasyButton::createEasyButton(const std::string &_normalFile, const s
 	cocos2d::CCSprite * touchSprite = cocos2d::CCSprite::create(_touchFile.c_str());
 	//Sprite* selectSprite = nullptr;
 	return new EasyButton(normalSprite, touchSprite, NULL);
-};
+}
 
 EasyButton* EasyButton::createEasyButton(const std::string &_normalFile, const std::string &_touchFile, const std::string &_selectedFile)
 {
@@ -88,9 +107,9 @@ EasyButton* EasyButton::createEasyButton(const std::string &_normalFile, const s
 	cocos2d::CCSprite * touchSprite = cocos2d::CCSprite::create(_touchFile.c_str());
 	cocos2d::CCSprite * selectSprite = cocos2d::CCSprite::create(_selectedFile.c_str());
 	return new EasyButton(normalSprite, touchSprite, selectSprite);
-};
+}
 
-void EasyButton::ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
+void EasyButton::onTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 {
 	if (_selected)
 	{
@@ -99,19 +118,20 @@ void EasyButton::ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEve
 	}
 }
 
-void EasyButton::ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
+void EasyButton::onTouchEnded(CCTouch *pTouch, CCEvent *pEvent, bool flag)
 {
 	if (_selected)
 	{
 		_normal->setVisible(true);
 		_selected->setVisible(false);
 	}
-#if 0
 	if (flag)
 	{
-		touchEvent();
+		if (this->touchEventObj != 0)
+		{
+			(this->touchEventObj->*touchEvent)();
+		}
 	}
-#endif
 }
 
 void EasyButton::setEventTouchEnabled(bool flag)
@@ -128,7 +148,7 @@ cocos2d::CCSprite* EasyButton::getNormal()
 
 
 //FIXME:
-void EasyButton::ccTouchesMoved(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
+void EasyButton::onTouchMoved(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent)
 {
 
 }

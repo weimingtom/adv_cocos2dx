@@ -6,7 +6,7 @@
 
 USING_NS_CC;
 
-class RadioButton : public cocos2d::CCNode
+class RadioButton : public cocos2d::CCNode, public cocos2d::CCTargetedTouchDelegate
 {
 	std::vector<EasyButton*>* _radios;	//单选按钮组
 	int _selectedNumber;	//当前选中的按钮下标
@@ -23,11 +23,19 @@ public:
 	void (cocos2d::CCObject::*touchEvent)();
 	cocos2d::CCObject *touchEventObj;
 
-	virtual void ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
-	virtual void ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
+	virtual void onTouchBegan(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent);
+	virtual void onTouchEnded(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent, bool flag);
 
 	int getSelectedNumber();	//返回选择按钮下标
 	void setSelectedNumber(int selectedNumber);	//设置默认被选中的按钮
+
+	//http://blog.csdn.net/xuguangsoft/article/details/8777418
+    virtual void onEnter();
+    virtual void onExit();
+	virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
+    virtual void ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent);
+    virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent);
+    virtual void ccTouchCancelled(CCTouch *pTouch, CCEvent *pEvent);
 };
 
 #endif
