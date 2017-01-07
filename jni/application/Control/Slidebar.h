@@ -5,7 +5,7 @@
 
 USING_NS_CC;
 
-class Slidebar : public cocos2d::CCNode 
+class Slidebar : public cocos2d::CCNode, public cocos2d::CCTargetedTouchDelegate
 {
 	cocos2d::CCSprite* _background;
 	cocos2d::CCSprite* _point;
@@ -42,6 +42,15 @@ public:
 	CCObject *touchEventObj;
 	void (cocos2d::CCObject::*moveEvent) ();	//移动事件
 	CCObject *moveEventObj;
+
+	//触碰事件
+	//http://blog.csdn.net/xuguangsoft/article/details/8777418
+    virtual void onEnter();
+    virtual void onExit();
+	virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
+    virtual void ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent);
+    virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent);
+    virtual void ccTouchCancelled(CCTouch *pTouch, CCEvent *pEvent);
 };
 
 #endif

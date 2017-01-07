@@ -13,6 +13,11 @@ Slidebar::Slidebar(cocos2d::CCSprite* backgroundSprite, cocos2d::CCSprite* point
 	_minValue = 0.0f;
 	_targetValue = NULL;
 	_floatValue = 0.5f;
+
+	this->touchEvent = NULL;
+	this->touchEventObj = NULL;
+	this->moveEvent = NULL;
+	this->moveEventObj = NULL;
 #if 0
     _controlEvent = createControlEvent();
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_controlEvent, this);
@@ -152,10 +157,101 @@ void Slidebar::setFloat(float value)
 	_floatValue = value;
 	_change = value / (_maxValue - _minValue);
 	setSlidebar();
-	
 }
 
 float Slidebar::getFloat()
 {
 	return _floatValue;
+}
+
+
+
+void Slidebar::onEnter()  
+{  
+	//addEventListenerWithSceneGraphPriority
+	//_eventTouch->setSwallowTouches(true);
+	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);  
+    CCNode::onEnter();  
+}
+
+void Slidebar::onExit()  
+{  
+    CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this);  
+    CCNode::onExit();  
+}  
+
+bool Slidebar::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
+{
+	if (_point->boundingBox().containsPoint(this->convertTouchToNodeSpace(pTouch)))	//如果碰到指针
+	{
+		return true;
+	}
+	else
+	{
+		if (_background->boundingBox().containsPoint(this->convertTouchToNodeSpace(pTouch)))
+		{
+			float setP = this->convertTouchToNodeSpace(pTouch).x;	//临时点
+			//限制滑块移动范围
+			if (setP < _background->getPositionX() - _maxWidth)
+			{
+				setP = _background->getPositionX() - _maxWidth;
+			}
+			if (setP > _background->getPositionX() + _maxWidth)
+			{
+				setP = _background->getPositionX() + _maxWidth;
+			}
+			_point->setPositionX(setP);
+			_pointPositionX = _point->getPositionX();
+			return true;
+		}
+		return false;
+	}
+}
+
+void Slidebar::ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent)
+{
+	float xOff = pTouch->getLocation().x - pTouch->getStartLocation().x;
+	float LLimit = _background->getPositionX() - _pointPositionX - _maxWidth;
+	float RLimit = _background->getPositionX() - _pointPositionX + _maxWidth;
+
+	if (xOff < LLimit) 
+	{
+		xOff = LLimit;
+	}
+	if (xOff > RLimit) 
+	{
+		xOff = RLimit;
+	}
+
+	_point->setPositionX(_pointPositionX + xOff);
+
+	//改变的倍率
+	_change = (_point->getPositionX()-(_background->getPositionX() - _maxWidth)) / (_maxWidth * 2);
+	changeTargetValue(_change);
+	_floatValue = (_maxValue - _minValue) * _change;
+
+	if (this->moveEventObj != NULL)
+	{
+		(this->moveEventObj->*moveEvent)();
+	}
+}
+
+void Slidebar::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent)
+{
+	//保存指针位置
+	_pointPositionX = _point->getPositionX();
+	//改变的倍率
+	_change = (_pointPositionX - (_background->getPositionX() - _maxWidth)) / (_maxWidth * 2);
+	changeTargetValue(_change);
+	_floatValue = (_maxValue-_minValue) * _change;
+
+	if (this->touchEventObj != NULL)
+	{
+		(this->touchEventObj->*touchEvent)();
+	}
+}
+
+void Slidebar::ccTouchCancelled(CCTouch *pTouch, CCEvent *pEvent)
+{
+
 }

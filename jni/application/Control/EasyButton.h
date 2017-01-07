@@ -12,8 +12,6 @@ class EasyButton : public cocos2d::CCNode, public cocos2d::CCTargetedTouchDelega
 	cocos2d::CCSprite* _normal;	//普通状态的图片
 	cocos2d::CCSprite* _touch;		//触碰状态的图片
 	cocos2d::CCSprite* _selected;	//选择状态的图片
-	//http://blog.csdn.net/xiebaochun/article/details/23281619
-	//EventListenerTouchOneByOne* _eventTouch;	//触碰事件
 public:
 	EasyButton(cocos2d::CCSprite* _normalSprite, cocos2d::CCSprite* _touchSprite, cocos2d::CCSprite* _selectedSprite);
 	~EasyButton();
@@ -34,6 +32,8 @@ public:
 	cocos2d::CCObject *touchEventObj;
 	//std::function<void(int i)> touchEventWithInt;	//带int参数的触碰事件方法指针
 
+	//http://blog.csdn.net/xiebaochun/article/details/23281619
+	//触碰事件
 	//http://blog.csdn.net/xuguangsoft/article/details/8777418
     virtual void onEnter();
     virtual void onExit();

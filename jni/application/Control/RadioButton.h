@@ -13,9 +13,6 @@ class RadioButton : public cocos2d::CCNode, public cocos2d::CCTargetedTouchDeleg
 	int _tmpSelectedNumber;	//临时
 	EasyButton* _selectedButton;	//当前被选中的按钮
 	EasyButton* _tmpSelectedButton;	//临时储存被选中的按钮
-#if 0
-	EventListenerTouchOneByOne* _eventTouch;	//触碰事件
-#endif
 public:
 	RadioButton();
 	~RadioButton();
@@ -29,6 +26,7 @@ public:
 	int getSelectedNumber();	//返回选择按钮下标
 	void setSelectedNumber(int selectedNumber);	//设置默认被选中的按钮
 
+	//触碰事件
 	//http://blog.csdn.net/xuguangsoft/article/details/8777418
     virtual void onEnter();
     virtual void onExit();
