@@ -12,9 +12,6 @@ class Slidebar : public cocos2d::CCNode, public cocos2d::CCTargetedTouchDelegate
 	float _maxValue;
 	float _minValue;
 	float* _targetValue;
-#if 0
-	EventListenerTouchOneByOne* _controlEvent;
-#endif
 	float _pointPositionX;
 	float _maxWidth;
 	float _change;	//滑动条改变的倍率
@@ -27,9 +24,6 @@ public:
 	void setMaxValue(float value);
 	void setMinValue(float value);
 	void valueChange();
-#if 0
-	EventListenerTouchOneByOne* createControlEvent();	//建立控制事件
-#endif
 	void setMaxWidth(float value);//设置滑块最大移动范围（半径）
 	void setTargetValue(float *value);
 	void changeTargetValue(float change);

@@ -4,7 +4,7 @@
 
 USING_NS_CC;
 
-class SaveData : public cocos2d::CCNode
+class SaveData : public cocos2d::CCNode, public cocos2d::CCTargetedTouchDelegate
 {
 	/*基本信息*/
 	std::string _imageFile;	//存档截图路径
@@ -24,8 +24,23 @@ public:
 	~SaveData();
 	void setOther();	//设置备注信息
 	static SaveData* create(int i);	//创建一个SaveData按钮
-	void (*onTouchEnded)(int);
+	
+	//void (*onTouchEnded)(int);
+	void (cocos2d::CCObject::*onTouchEnded)(int);
+	cocos2d::CCObject *onTouchEndedObj;
+
 	void updataData();	//刷新按钮数据
 	cocos2d::CCSprite* getStageLayer();
+
+	//触碰事件
+	//http://blog.csdn.net/xuguangsoft/article/details/8777418
+    virtual void onEnter();
+    virtual void onExit();
+	virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
+    virtual void ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent);
+    virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent);
+    virtual void ccTouchCancelled(CCTouch *pTouch, CCEvent *pEvent);
+
+	cocos2d::CCSprite *touchImage;
 };
 

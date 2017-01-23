@@ -7,9 +7,6 @@ USING_NS_CC;
 class LoadScene : public cocos2d::CCLayer
 {
 	SaveData* dataButtons[8];
-#if 0
-	EventListenerTouchOneByOne* eventTouch[8];
-#endif
 public:
 	LoadScene();
 	~LoadScene();
