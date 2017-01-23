@@ -6,6 +6,129 @@
 
 #define MAX_CHARACTOR_NUMBER 5
 
+class StageLayer : public cocos2d::CCLayer
+{
+public:
+	StageLayer() {}
+	virtual ~StageLayer(){}
+
+	virtual bool init()
+	{
+		if (!this->CCLayer::init())
+		{
+			return false;
+		}
+		//FIXME:crash here
+		this->setTouchEnabled(false); //FIXME:
+		this->setTouchMode(kCCTouchesOneByOne); //kCCTouchesOneByOne->ccTouchBegan,kCCTouchAllAtOnce->ccTouchesBegan
+		return true;
+	}
+
+	//CREATE_FUNC(StageLayer);
+	static StageLayer* create()
+	{
+		StageLayer *pRet = new StageLayer();
+		if (pRet && pRet->init())
+		{
+			pRet->autorelease();
+		}
+		else
+		{
+			CC_SAFE_DELETE(pRet);
+		}
+    
+		return pRet;
+	}
+
+
+
+	//触碰事件
+	//http://blog.csdn.net/xuguangsoft/article/details/8777418
+#if 1
+	virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
+	{
+		if (onTouchEndedObj != NULL)
+		{
+			(onTouchEndedObj->*onTouchEnded)();
+			return true;
+		}
+		return false;
+	}
+
+	virtual void ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent)
+	{
+
+	}
+
+	virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent)
+	{
+
+	}
+
+	virtual void ccTouchCancelled(CCTouch *pTouch, CCEvent *pEvent)
+	{
+
+	}
+
+
+#endif
+
+public:
+	void (cocos2d::CCObject::*onTouchEnded)();
+	cocos2d::CCObject *onTouchEndedObj;
+};
+
+class DialogSprite : public cocos2d::CCSprite, public cocos2d::CCTargetedTouchDelegate
+{
+public:
+	DialogSprite() {}
+	virtual ~DialogSprite(){}
+
+	static DialogSprite* create(const char *pszFileName)
+	{
+		DialogSprite *pobSprite = new DialogSprite();
+		if (pobSprite && pobSprite->initWithFile(pszFileName))
+		{
+			pobSprite->autorelease();
+			return pobSprite;
+		}
+		CC_SAFE_DELETE(pobSprite);
+		return NULL;
+	}
+
+	virtual void onEnter()  
+	{
+		CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);  
+		CCSprite::onEnter();  
+	}
+
+	virtual void onExit()  
+	{  
+		CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this);  
+		CCSprite::onExit();  
+	}  
+
+	//触碰事件
+	//http://blog.csdn.net/xuguangsoft/article/details/8777418
+	virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
+	{
+		if (this->boundingBox().containsPoint(this->convertTouchToNodeSpace(pTouch)))
+		{
+			if (onTouchEndedObj != NULL)
+			{
+				(onTouchEndedObj->*onTouchEnded)();
+				return true;
+			}
+		}
+		return false;
+	}
+
+public:
+	void (cocos2d::CCObject::*onTouchEnded)();
+	cocos2d::CCObject *onTouchEndedObj;
+};
+
+
 class GameScene : public cocos2d::CCLayer
 {
 	cocos2d::CCLabelTTF* _label;//文本框的文本层
@@ -13,7 +136,8 @@ class GameScene : public cocos2d::CCLayer
 
 	cocos2d::CCLabelTTF* _nameLabel;	//姓名框
 	CharLabel* _textLabel;	//对白框
-	cocos2d::CCSprite* _dialogWindow;	//文本框背景
+	/*cocos2d::CCLayer*/StageLayer *stageLayer;
+	/*cocos2d::CCSprite*/DialogSprite* _dialogWindow;	//文本框背景
 	cocos2d::CCLayer* _backgroundLayer;	//背景层
 	cocos2d::CCSprite* _backgroundSprite;	//背景图片
 	cocos2d::CCLayer* _charactorsLayer;	//立绘层
@@ -92,5 +216,10 @@ public:
 	cocos2d::CCMenu* _menu;
 	std::string _tmp;
 	std::string _tmp2;
+
+
+	//Added
+	void afterChangeBackground(CCNode *node, void *data);
+	void afterUnDisplayCharator(CCNode *node, void *data);
 };
 

@@ -75,17 +75,11 @@ void CharLabel::showNextChar()
 		{
 			cocos2d::CCSprite *eventSprite = cocos2d::CCSprite::create();
 			addChild(eventSprite);
-#if 0
-			eventSprite->runAction
-				(
-				cocos2d::CCSequence::create
-				(
+			eventSprite->runAction(cocos2d::CCSequence::create(
 				cocos2d::CCDelayTime::create(_fadeTime),
-				CallFunc::create(_showFinishCallback),
+				cocos2d::CCCallFunc::create(this, _showFinishCallback), 
 				NULL
-				)
-				);
-#endif
+			));
 		}
 		return;
 	}
@@ -114,14 +108,12 @@ void CharLabel::showNextChar()
 	tmpLabel->setOpacity(0);
 	tmpLabel->setPosition(ccp(_x, _y));
 	_x += tmpLabel->getContentSize().width;
-#if 0
 	tmpLabel->runAction(cocos2d::CCSpawn::createWithTwoActions(
-		FadeIn::create(_fadeTime), 
-		Sequence::createWithTwoActions(
-			DelayTime::create(_defaultDelayTime), 
-			CallFunc::create(CC_CALLBACK_0(CharLabel::showNextChar, this)))
+		cocos2d::CCFadeIn::create(_fadeTime), 
+		cocos2d::CCSequence::createWithTwoActions(
+			cocos2d::CCDelayTime::create(_defaultDelayTime), 
+			cocos2d::CCCallFunc::create(this, callfunc_selector(CharLabel::showNextChar)))
 		));
-#endif
 	_charLabel = tmpLabel;
 }
 

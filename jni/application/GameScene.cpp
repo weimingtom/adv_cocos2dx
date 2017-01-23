@@ -69,15 +69,13 @@ bool GameScene::init()
 	cocos2d::CCSize visibleSize = cocos2d::CCDirector::sharedDirector()->getVisibleSize();
 	cocos2d::CCPoint origin = cocos2d::CCDirector::sharedDirector()->getVisibleOrigin();
     
-	cocos2d::CCLayer *stageLayer = cocos2d::CCLayer::create();
+	this->stageLayer = /*cocos2d::CCLayer*/StageLayer::create();
 	addChild(stageLayer, 13);
 
-	//背景层
 	_backgroundLayer = cocos2d::CCLayer::create();
 	//_backgroundLayer->setLocalZOrder(0);
 	this->addChild(_backgroundLayer, -1);
 
-	//立绘层
 	_charactorsLayer = cocos2d::CCLayer::create();
 	this->addChild(_charactorsLayer, 1);
 	for (int i = 0; i < 5; i++)
@@ -85,57 +83,56 @@ bool GameScene::init()
 		_chars[i] = new Charactor;
 	}
 
-	//对话框
-	cocos2d::CCSprite *_dialogWindow = cocos2d::CCSprite::create("/ui/dialog/dialog_bg.png");
-	_dialogWindow->setPosition(ccp(visibleSize.width / 2, 110));
+	this->_dialogWindow = /*cocos2d::CCSprite*/DialogSprite::create("/ui/dialog/dialog_bg.png");
+	_dialogWindow->setPosition(ccp(visibleSize.width / 2, 85/*110*/));
+	_dialogWindow->setScale(0.8f); //FIXME:added
 	this->addChild(_dialogWindow,10);
 
-	//文本框
-	_nameLabel = CCLabelTTF::create("", "微软雅黑", 24);
+	_nameLabel = CCLabelTTF::create("abcdefg", "΢���ź�", 12/*24*/);
 	_nameLabel->setColor(ccBLACK);
 	_nameLabel->setAnchorPoint(ccp(0.0f, 0.5f));
-	_nameLabel->setPosition(ccp(70, _dialogWindow->getContentSize().height - 40));
-	_dialogWindow->addChild(_nameLabel,11);
+	_nameLabel->setPosition(ccp(30/*70*/, _dialogWindow->getContentSize().height - 20/*40*/));
+	_dialogWindow->addChild(_nameLabel, 20);
 
-	_textLabel = CharLabel::create("", 24, (void (cocos2d::CCObject::*)(void)) GameScene::showClickSign, this);
-	_textLabel->setPosition(ccp(_nameLabel->getPositionX(), _nameLabel->getPositionY() - 25));
+	_textLabel = CharLabel::create("", 12/*24*/, (void (cocos2d::CCObject::*)(void)) GameScene::showClickSign, this);
+	_textLabel->setPosition(ccp(_nameLabel->getPositionX(), _nameLabel->getPositionY() - 15/*25*/));
 	_textLabel->setColor(ccBLACK);
 	_dialogWindow->addChild(_textLabel, 12);
 
-	//对话框按钮
+	//�Ի���ť
 	cocos2d::CCMenuItemImage *buttonDict = cocos2d::CCMenuItemImage::create(
 		"/ui/dialog/button_dict.png", 
 		"/ui/dialog/button_dict_down.png", this,
 		menu_selector(GameScene::startAutoPlay));
-	buttonDict->setPosition(ccp(840, 220));
+	buttonDict->setPosition(ccp(270/*840*/, 130/*220*/));
 
 	cocos2d::CCMenuItemImage *buttonSave = cocos2d::CCMenuItemImage::create(
 		"/ui/dialog/button_save.png", 
 		"/ui/dialog/button_save_down.png", this, 
 		menu_selector(GameScene::showSaveScene));
-	buttonSave->setPosition(ccp(900, 220));
+	buttonSave->setPosition(ccp(300/*900*/, 130/*220*/));
 
 	cocos2d::CCMenuItemImage *buttonLoad = cocos2d::CCMenuItemImage::create(
 		"/ui/dialog/button_load.png", 
 		"/ui/dialog/button_load_down.png", this, 
 		menu_selector(GameScene::showLoadScene));
-	buttonLoad->setPosition(ccp(960, 220));
+	buttonLoad->setPosition(ccp(330/*960*/, 130/*220*/));
 
 	cocos2d::CCMenuItemImage *buttonLog = cocos2d::CCMenuItemImage::create(
 		"/ui/dialog/button_log.png", 
 		"/ui/dialog/button_log_down.png", this,  
 		menu_selector(GameScene::showHistoryScene));
-	buttonLog->setPosition(ccp(1020, 220));
+	buttonLog->setPosition(ccp(360/*1020*/, 130/*220*/));
 
 	cocos2d::CCMenuItemImage *buttonConfig = cocos2d::CCMenuItemImage::create(
 		"/ui/dialog/button_config.png", 
 		"/ui/dialog/button_config_down.png");
-	buttonConfig->setPosition(ccp(1080, 220));
+	buttonConfig->setPosition(ccp(390/*1080*/, 130/*220*/));
 
 	cocos2d::CCMenuItemImage *buttonTitle = cocos2d::CCMenuItemImage::create(
 		"/ui/dialog/button_title.png", 
 		"/ui/dialog/button_title_down.png");
-	buttonTitle->setPosition(ccp(1200, 220));
+	buttonTitle->setPosition(ccp(440/*1200*/, 130/*220*/));
 
 	cocos2d::ui::CheckBox *CBskip = cocos2d::ui::CheckBox::create();
 	CBskip->loadTextures("/ui/dialog/charbox_skip_off.png", 
@@ -143,7 +140,7 @@ bool GameScene::init()
 		"/ui/dialog/charbox_skip_on.png", 
 		"/ui/dialog/charbox_skip_off.png", 
 		"/ui/dialog/charbox_skip_on.png");
-	CBskip->setPosition(ccp(1000, 125));
+	CBskip->setPosition(ccp(500/*1000*/, 65/*125*/));
 	_dialogWindow->addChild(CBskip, 0);
 
 	cocos2d::ui::CheckBox *CBauto = cocos2d::ui::CheckBox::create();
@@ -152,7 +149,7 @@ bool GameScene::init()
 		"/ui/dialog/charbox_auto_on.png", 
 		"/ui/dialog/charbox_auto_off.png", 
 		"/ui/dialog/charbox_auto_on.png");
-	CBauto->setPosition(ccp(1000, 75));
+	CBauto->setPosition(ccp(500/*1000*/, 38/*75*/));
 	/*
 	CBauto->onTouchEnded = [=](Touch *touch, Event *unusedEvent)
 	{
@@ -168,6 +165,14 @@ bool GameScene::init()
 	cocos2d::CCLayer *_selectLayer = cocos2d::CCLayer::create();
 	this->addChild(_selectLayer, 13);
 
+
+	stageLayer->onTouchEndedObj = this;
+	stageLayer->onTouchEnded = (void (cocos2d::CCObject::*)())&GameScene::screenClicked;
+	this->_dialogWindow->onTouchEndedObj = this;
+	this->_dialogWindow->onTouchEnded = (void (cocos2d::CCObject::*)())&GameScene::dialogClicked;
+
+	//this->setTouchEnabled(true); //FIXME:
+	//this->setTouchMode(kCCTouchesOneByOne); //kCCTouchesOneByOne->ccTouchBegan,kCCTouchAllAtOnce->ccTouchesBegan
 #if 0
 	auto clickEvent = EventListenerTouchOneByOne::create();
 	clickEvent->onTouchBegan = [=](Touch *t, Event *e)
@@ -226,7 +231,6 @@ bool GameScene::init()
 		reloadScene();
 		GameSystem::getInstance()->setIsLoadSuccess(false);
 	}
-
 	return true;
 }
 
@@ -268,30 +272,37 @@ void GameScene::showText(std::string &text)
 void GameScene::changeBackground(std::string &key)
 {
 	std::string background = BM->getBackground(key);
-	if (background.compare("") == 0) return;	//如果找不到就退出
+	if (background.compare("") == 0) 
+	{
+		return;
+	}
 	_backgroundKey = key;
 	cocos2d::CCSprite *backgroundSprite = cocos2d::CCSprite::create(background.c_str());
 	backgroundSprite->setAnchorPoint(ccp(0, 0));
 	backgroundSprite->setOpacity(0);
 	_backgroundLayer->addChild(backgroundSprite);
-#if 0
-	backgroundSprite->runAction(Sequence::createWithTwoActions(FadeIn::create(1.0f), CallFunc::create([&]()
-	{
-		if (_backgroundSprite)
-		{
-			//auto tmp = _backgroundSprite;
-			_backgroundSprite = backgroundSprite;
-			//tmp->removeFromParent();
-		}
-		else
-		{
-			_backgroundSprite = backgroundSprite;
-		}
-	}
-		)
-		));
-#endif
+	//FIXME:
+	backgroundSprite->runAction(cocos2d::CCSequence::createWithTwoActions(CCFadeIn::create(1.0f), 
+		CCCallFuncND::create(this, callfuncND_selector(GameScene::afterChangeBackground), (void *)backgroundSprite)
+	));
 }
+
+void GameScene::afterChangeBackground(CCNode *node, void *data)
+{
+	cocos2d::CCSprite *backgroundSprite = (cocos2d::CCSprite *)data;
+    //CCLOG("Action finished");
+	if (_backgroundSprite)
+	{
+		//auto tmp = _backgroundSprite;
+		_backgroundSprite = backgroundSprite;
+		//tmp->removeFromParent();
+	}
+	else
+	{
+		_backgroundSprite = backgroundSprite;
+	}
+}
+
 
 void GameScene::playBackgroundMusic(std::string &key)
 {
@@ -565,97 +576,97 @@ void GameScene::unDisplayCharator(std::string &cName)
 	Charactor* cha = CM->getCharactor(cName);
 	if (cha->faceSprite)
 	{
-#if 0
-		cha->faceSprite->runAction(Sequence::createWithTwoActions(FadeOut::create(1.0f), CallFunc::create([=]()
-		{
-			if (_charNumber == 1)
-			{
-				_chars[2] = _emptyChar;
-			}
-			else
-				if (_charNumber == 2)
-				{
-					switch (cha->currentPosition)
-					{
-					case LEFT_CENTER:
-					{
-						_chars[1] = _emptyChar;
-						_chars[3]->moveTo(CENTER);
-						_chars[2] = _chars[3];
-						_chars[3] = _emptyChar;
-						break;
-					}
-					case RIGHT_CENTER:
-					{
-						_chars[3] = _emptyChar;
-						_chars[1]->moveTo(CENTER);
-						_chars[2] = _chars[1];
-						_chars[1] = _emptyChar;
-						break;
-					}
-					default:
-					{
-						break;
-					}
-					}
-				}
-				else
-					if (_charNumber == 3)
-					{
-						switch (cha->currentPosition)
-						{
-						case LEFT:
-						{
-							_chars[0] = _emptyChar;
-							_chars[2]->moveTo(LEFT_CENTER);
-							_chars[1] = _chars[2];
-							_chars[2] = _emptyChar;
-							_chars[4]->moveTo(RIGHT_CENTER);
-							_chars[3] = _chars[4];
-							_chars[4] = _emptyChar;
-							break;
-						}
-						case CENTER:
-						{
-							_chars[2] = _emptyChar;
-							_chars[0]->moveTo(LEFT_CENTER);
-							_chars[1] = _chars[0];
-							_chars[0] = _emptyChar;
-							_chars[4]->moveTo(RIGHT_CENTER);
-							_chars[3] = _chars[4];
-							_chars[4] = _emptyChar;
-							break;
-						}
-						case RIGHT:
-						{
-							_chars[4] = _emptyChar;
-							_chars[0]->moveTo(LEFT_CENTER);
-							_chars[1] = _chars[0];
-							_chars[0] = _emptyChar;
-							_chars[2]->moveTo(RIGHT_CENTER);
-							_chars[3] = _chars[2];
-							_chars[2] = _emptyChar;
-							break;
-						}
-						default:
-						{
-							break;
-						}
-						}
-
-					}
-			cha->leave();
-			_charNumber--;
-			return;
-		}
-			)
-			)
-			);
-#endif
+		cha->faceSprite->runAction(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCFadeOut::create(1.0f), 
+			CCCallFuncND::create(this, callfuncND_selector(GameScene::afterUnDisplayCharator), (void *)cha)
+		));
 	}
 	else
+	{
 		return;
+	}
 }
+
+void GameScene::afterUnDisplayCharator(CCNode *node, void *data)
+{
+	Charactor *cha = (Charactor*)data;
+	if (_charNumber == 1)
+	{
+		_chars[2] = _emptyChar;
+	}
+	else if (_charNumber == 2)
+	{
+		switch (cha->currentPosition)
+		{
+			case LEFT_CENTER:
+			{
+				_chars[1] = _emptyChar;
+				_chars[3]->moveTo(CENTER);
+				_chars[2] = _chars[3];
+				_chars[3] = _emptyChar;
+				break;
+			}
+			case RIGHT_CENTER:
+			{
+				_chars[3] = _emptyChar;
+				_chars[1]->moveTo(CENTER);
+				_chars[2] = _chars[1];
+				_chars[1] = _emptyChar;
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
+	} 
+	else if (_charNumber == 3)
+	{
+		switch (cha->currentPosition)
+		{
+			case LEFT:
+			{
+				_chars[0] = _emptyChar;
+				_chars[2]->moveTo(LEFT_CENTER);
+				_chars[1] = _chars[2];
+				_chars[2] = _emptyChar;
+				_chars[4]->moveTo(RIGHT_CENTER);
+				_chars[3] = _chars[4];
+				_chars[4] = _emptyChar;
+				break;
+			}
+			case CENTER:
+			{
+				_chars[2] = _emptyChar;
+				_chars[0]->moveTo(LEFT_CENTER);
+				_chars[1] = _chars[0];
+				_chars[0] = _emptyChar;
+				_chars[4]->moveTo(RIGHT_CENTER);
+				_chars[3] = _chars[4];
+				_chars[4] = _emptyChar;
+				break;
+			}
+			case RIGHT:
+			{
+				_chars[4] = _emptyChar;
+				_chars[0]->moveTo(LEFT_CENTER);
+				_chars[1] = _chars[0];
+				_chars[0] = _emptyChar;
+				_chars[2]->moveTo(RIGHT_CENTER);
+				_chars[3] = _chars[2];
+				_chars[2] = _emptyChar;
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
+	}
+	cha->leave();
+	_charNumber--;
+	return;
+}
+
 
 void GameScene::showSaveScene(CCObject *)
 {
@@ -900,3 +911,4 @@ void GameScene::menuButton(CCObject *)
 	_currentOptions.clear();
 	_optionsNumber = 0;
 }
+
