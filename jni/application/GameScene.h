@@ -6,6 +6,8 @@
 
 #define MAX_CHARACTOR_NUMBER 5
 
+#define USE_STAGELAYER_TOUCH_ENABLE 0
+
 class StageLayer : public cocos2d::CCLayer
 {
 public:
@@ -19,8 +21,11 @@ public:
 			return false;
 		}
 		//FIXME:crash here
-		this->setTouchEnabled(false); //FIXME:
+#if USE_STAGELAYER_TOUCH_ENABLE
+		this->setTouchPriority(-128); //FIXME:???must setTouchPriority, or crash !!!
+		this->setTouchEnabled(true); //FIXME:
 		this->setTouchMode(kCCTouchesOneByOne); //kCCTouchesOneByOne->ccTouchBegan,kCCTouchAllAtOnce->ccTouchesBegan
+#endif
 		return true;
 	}
 
@@ -40,39 +45,21 @@ public:
 		return pRet;
 	}
 
-
-
 	//´¥ÅöÊÂ¼þ
 	//http://blog.csdn.net/xuguangsoft/article/details/8777418
-#if 1
 	virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 	{
 		if (onTouchEndedObj != NULL)
 		{
+			CCLOG("StageLayer ccTouchBegan");
 			(onTouchEndedObj->*onTouchEnded)();
 			return true;
 		}
 		return false;
 	}
-
-	virtual void ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent)
-	{
-
-	}
-
-	virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent)
-	{
-
-	}
-
-	virtual void ccTouchCancelled(CCTouch *pTouch, CCEvent *pEvent)
-	{
-
-	}
-
-
-#endif
-
+	virtual void ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent){}
+	virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent){}
+	virtual void ccTouchCancelled(CCTouch *pTouch, CCEvent *pEvent){}
 public:
 	void (cocos2d::CCObject::*onTouchEnded)();
 	cocos2d::CCObject *onTouchEndedObj;

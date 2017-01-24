@@ -27,6 +27,7 @@ GameScene::GameScene()
 	, _currentText("")
 	//, _currentOptions(NULL)
 	, _optionsNumber(0)
+	, _menu(NULL)
 {
 	_emptyChar = new Charactor;
 }
@@ -162,7 +163,7 @@ bool GameScene::init()
 	menu->setPosition(ccp(0, 0));
 	this->addChild(menu, 13);
 
-	cocos2d::CCLayer *_selectLayer = cocos2d::CCLayer::create();
+	/*cocos2d::CCLayer **/_selectLayer = cocos2d::CCLayer::create();
 	this->addChild(_selectLayer, 13);
 
 
@@ -530,31 +531,32 @@ void GameScene::displayCharator(std::string& cName, std::string& face)
 				if (sp)
 					*pChar = cha;
 
+				//FIXME:fg position
 				switch (tmpPT)
 				{
 				case LEFT:
 				{
-					sp->setPositionX(320);
+					sp->setPositionX(125/*320*/);
 					break;
 				}
 				case LEFT_CENTER:
 				{
-					sp->setPositionX(427);
+					sp->setPositionX(197/*427*/);
 					break;
 				}
 				case CENTER:
 				{
-					sp->setPositionX(640);
+					sp->setPositionX(250/*640*/);
 					break;
 				}
 				case RIGHT_CENTER:
 				{
-					sp->setPositionX(853);
+					sp->setPositionX(322/*853*/);
 					break;
 				}
 				case RIGHT:
 				{
-					sp->setPositionX(960);
+					sp->setPositionX(375/*960*/);
 					break;
 				}
 				default:

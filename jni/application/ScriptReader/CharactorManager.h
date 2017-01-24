@@ -26,7 +26,7 @@ struct Charactor
 	std::string name;	//角色名
 	cocos2d::ccColor3B color;	//对白颜色（暂时不使用）
 	//待补充……
-	std::map<std::string, char*>* fgList;	//立绘列表
+	std::map<std::string, std::string>* fgList;	//立绘列表
 	int favor;	//好感度（暂时不使用）
 	int hate;	//仇恨度（暂时不使用）
 
@@ -46,14 +46,14 @@ struct Charactor
 		, currentFace("")
 	{}
 
-	char* getCharactorFace(std::string &face)	//根据face值获取角色表情
+	const char* getCharactorFace(std::string &face)	//根据face值获取角色表情
 	{
 		CCLOG("CM> result.first = %s", face.c_str());
-		std::map<std::string, char*>::iterator result = fgList->find(face);
+		std::map<std::string, std::string>::iterator result = fgList->find(face);
 		if (result != fgList->end())
 		{
-			CCLOG("CM> result.second = %s", result->second);
-			return result->second;
+			CCLOG("CM> result.second = %s", result->second.c_str());
+			return result->second.c_str();
 		}
 		else
 		{
@@ -61,6 +61,7 @@ struct Charactor
 		}
 	}
 
+	//FIXME:fg position
 	void moveTo(PositionType pt)
 	{
 		int Distance;	//立绘移动的位置
@@ -70,14 +71,14 @@ struct Charactor
 		case LEFT:
 		{
 			//faceSprite->setPositionX(320);
-			Distance = 320;
+			Distance = 125/*320*/;
 			faceSprite->runAction(cocos2d::CCMoveTo::create(0.3f, cocos2d::CCPoint(Distance, 0)));
 			break;
 		}
 		case LEFT_CENTER:
 		{
 			//faceSprite->setPositionX(427);
-			Distance = 427;
+			Distance = 197/*427*/;
 			CCLOG("name = %s", name.c_str());
 			faceSprite->runAction(cocos2d::CCMoveTo::create(0.3f, cocos2d::CCPoint(Distance, 0)));
 			break;
@@ -85,21 +86,21 @@ struct Charactor
 		case CENTER:
 		{
 			//faceSprite->setPositionX(640);
-			Distance = 640;
+			Distance = 250/*640*/;
 			faceSprite->runAction(cocos2d::CCMoveTo::create(0.3f, cocos2d::CCPoint(Distance, 0)));
 			break;
 		}
 		case RIGHT_CENTER:
 		{
 			//faceSprite->setPositionX(853);
-			Distance = 853;
+			Distance = 322/*853*/;
 			faceSprite->runAction(cocos2d::CCMoveTo::create(0.3f, cocos2d::CCPoint(Distance, 0)));
 			break;
 		}
 		case RIGHT:
 		{
 			//faceSprite->setPositionX(960);
-			Distance = 960;
+			Distance = 375/*960*/;
 			faceSprite->runAction(cocos2d::CCMoveTo::create(0.3f, cocos2d::CCPoint(Distance, 0)));
 			break;
 		}

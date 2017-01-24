@@ -38,7 +38,7 @@ CharactorManager::CharactorManager()
 		name = ss.substr(sPos, ePos - sPos - 1);
 		tempCharactor->name = name;
 		sPos = ePos + 1;
-		tempCharactor->fgList = new std::map<std::string, char*>();
+		tempCharactor->fgList = new std::map<std::string, std::string>();
 		while (1)
 		{
 			std::string temp;
@@ -52,10 +52,11 @@ CharactorManager::CharactorManager()
 			face = temp.substr(0, tempPos);
 			facePath = temp.substr(tempPos + 1, temp.length() - tempPos - 1);
 			facePath = "/charactor/" + facePath + ".png";
-			char* tmpfacePath = new char;
-			facePath.copy(tmpfacePath,facePath.length(),0);
-			*(tmpfacePath + facePath.length()) = '\0';
-			tempCharactor->fgList->insert(std::pair<std::string, char*>(face, tmpfacePath));
+			//char* tmpfacePath = new char;
+			//facePath.copy(tmpfacePath,facePath.length(),0);
+			//*(tmpfacePath + facePath.length()) = '\0';
+			tempCharactor->fgList->insert(std::pair<std::string, std::string>(face, facePath/*tmpfacePath*/));
+			CCLOG(">>>>>>insert %s, %s", face.c_str(), facePath.c_str());
 		}
 
 		/*

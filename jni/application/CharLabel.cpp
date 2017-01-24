@@ -44,8 +44,13 @@ bool CharLabel::init(std::string &text, int fontSize)
 
 void CharLabel::setString(std::string &text)
 {
+	if (_charLabel) 
+	{
+		this->removeChild(_charLabel);
+		_charLabel = NULL;
+	}
 	this->CCNode::removeAllChildren();
-	_charLabel = NULL;
+	//_charLabel = NULL;
 	_text = text;
 	_pos = 0;
 	_x = 0;
