@@ -2,15 +2,15 @@
 
 HistoryMessage::HistoryMessage(std::string text, std::string name, cocos2d::ccColor4B color)
 {
-	_nameLabel = cocos2d::CCLabelTTF::create(name.c_str(), "黑体", 20);
+	_nameLabel = cocos2d::CCLabelTTF::create(name.c_str(), "黑体", 10/*20*/);
 	_nameLabel->setColor(ccWHITE);
 	_nameLabel->setAnchorPoint(ccp(0.0f, 0.5f));
-	_nameLabel->setPosition(ccp(-265, 12));
+	_nameLabel->setPosition(ccp(-365/*-265*/, 6/*12*/));
 	this->addChild(_nameLabel);
 
-	_textLabel = cocos2d::CCLabelTTF::create(text.c_str(), "黑体", 20);
+	_textLabel = cocos2d::CCLabelTTF::create(text.c_str(), "黑体", 10/*20*/);
 	_textLabel->setAnchorPoint(ccp(0.0f, 0.5f));
-	_textLabel->setPosition(ccp(-265, -12));
+	_textLabel->setPosition(ccp(-365/*-265*/, -6/*-12*/));
 	this->addChild(_textLabel);
 }
 
@@ -70,7 +70,7 @@ bool HistoryScene::init()
 
 	/*加载历史记录*/
 	cocos2d::CCSprite *historyList = cocos2d::CCSprite::create();
-	int startY = 0;
+	int startY = 100/*0*/;
 	for (int i = 0; i < HistoryLogger::getInstance()->getLength(); i++)
 	{
 		//log("i = %d", i);
@@ -80,7 +80,7 @@ bool HistoryScene::init()
 		hm->setAnchorPoint(ccp(0.5f, 1.0f));
 		hm->setPosition(visibleSize.width / 2, startY);
 		historyList->addChild(hm);
-		startY -= hm->getContentSize().height + 50;
+		startY -= hm->getContentSize().height + 30/*50*/;
 
 	}
 	historyList->setPosition(ccp(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));

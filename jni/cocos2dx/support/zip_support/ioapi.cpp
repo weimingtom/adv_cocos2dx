@@ -197,8 +197,13 @@ static long ZCALLBACK fseek64_file_func (voidpf  opaque, voidpf stream, ZPOS64_T
         break;
     default: return -1;
     }
+#if (_MSC_VER >= 1400) && (!(defined(NO_MSCVER_FILE64_FUNC)))
     if(fseeko64((FILE *)stream, offset, fseek_origin) != 0)
         return -1;
+#else
+    if(fseeko64((FILE *)stream, (long)offset, fseek_origin) != 0)
+        return -1;
+#endif
     return 0;
 #endif
 }

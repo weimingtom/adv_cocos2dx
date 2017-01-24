@@ -53,65 +53,19 @@ bool SaveScene::init()
 	for (/*int*/ i = 0; i < 4; i++)
 	{
 		dataButtons[i] = SaveData::create(i);
-		dataButtons[i]->setPosition(425, 520 - 115 * i);
-		//dataButtons[i]->onTouchEnded = CC_CALLBACK_1(GameSystem::saveGameSceneInfo, GameSystem::getInstance());
-#if 0
-		eventTouch[i] = EventListenerTouchOneByOne::create();
-		eventTouch[i]->onTouchBegan = [=](Touch *t, Event *e)
-		{
-			if (dataButtons[i]->getStageLayer()->getBoundingBox().containsPoint(dataButtons[i]->convertTouchToNodeSpace(t)))	//如果碰到指针
-			{
-				return true;
-			}
-			return false;
-		};
-		eventTouch[i]->onTouchEnded = [=](Touch *t, Event *e)
-		{
-			if (dataButtons[i]->getStageLayer()->getBoundingBox().containsPoint(dataButtons[i]->convertTouchToNodeSpace(t)))	//如果碰到指针
-			{
-				save(i);
-			}
-			else
-			{
-
-			}
-		};
-		this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventTouch[i], this);
-#endif
+		dataButtons[i]->setPosition(140/*425*/, 235/*520*/ - 50/*115*/ * i);
+		dataButtons[i]->onTouchEndedObj = this;
+		dataButtons[i]->onTouchEnded = (void (CCObject::*)(int)) &SaveScene::save;
 		stageLayer->addChild(dataButtons[i]);
 	}
 	for (/*int*/ i = 4; i < 8; i++)
 	{
 		dataButtons[i] = SaveData::create(i);
-		dataButtons[i]->setPosition(850, 520 - 115 * (i - 4));
-		//dataButtons[i]->onTouchEnded = CC_CALLBACK_1(GameSystem::saveGameSceneInfo, GameSystem::getInstance());
-#if 0
-		eventTouch[i] = EventListenerTouchOneByOne::create();
-		eventTouch[i]->onTouchBegan = [=](Touch *t, Event *e)
-		{
-			if (dataButtons[i]->getStageLayer()->getBoundingBox().containsPoint(dataButtons[i]->convertTouchToNodeSpace(t)))	//如果碰到指针
-			{
-				return true;
-			}
-			return false;
-		};
-		eventTouch[i]->onTouchEnded = [=](Touch *t, Event *e)
-		{
-			if (dataButtons[i]->getStageLayer()->getBoundingBox().containsPoint(dataButtons[i]->convertTouchToNodeSpace(t)))	//如果碰到指针
-			{
-				save(i);
-			}
-			else
-			{
-
-			}
-		};
-		this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventTouch[i], this);
-#endif
+		dataButtons[i]->setPosition(335/*850*/, 235/*520*/ - 50/*115*/ * (i - 4));
+		dataButtons[i]->onTouchEndedObj = this;
+		dataButtons[i]->onTouchEnded = (void (CCObject::*)(int)) &SaveScene::save;
 		stageLayer->addChild(dataButtons[i]);
 	}
-	
-
 
 	//返回按钮
 	cocos2d::CCMenuItemImage *buttonBack = cocos2d::CCMenuItemImage::create(

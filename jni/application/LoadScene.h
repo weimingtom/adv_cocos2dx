@@ -10,15 +10,10 @@ class LoadScene : public cocos2d::CCLayer
 public:
 	LoadScene();
 	~LoadScene();
-
 	static cocos2d::CCScene* createScene();
-
 	virtual bool init();
-
 	CREATE_FUNC(LoadScene);
-
 	void back(CCObject *);	//·µ»Ø
-
 	void load(int i);	//¶Áµµ
 };
 
