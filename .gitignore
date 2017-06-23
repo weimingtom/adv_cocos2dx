@@ -1,3 +1,24 @@
+jni/application/Debug/
+jni/cocos2dx/Debug/
+jni/glew/Debug/
+jni/jpeg/Debug/
+jni/png/Debug/
+jni/pthread/Debug/
+jni/zlib/Debug/
+
+jni/application/Release/
+jni/cocos2dx/Release/
+jni/glew/Release/
+jni/jpeg/Release/
+jni/png/Release/
+jni/pthread/Release/
+jni/zlib/Release/
+
+*.ncb
+*.opt
+*.plg
+
+
 # Object files
 *.o
 *.ko
